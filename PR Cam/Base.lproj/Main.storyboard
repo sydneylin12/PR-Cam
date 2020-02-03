@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PR_Cam" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="Super View">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hrp-q7-98m">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eLi-zP-Jun" userLabel="Timer Label">
+                                <rect key="frame" x="156.5" y="54" width="101.5" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="sVY-cb-pC1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fSy-Ig-gbM">
+                                <rect key="frame" x="157" y="762" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="6bv-MW-fFU"/>
+                                    <constraint firstAttribute="height" constant="100" id="FbA-8P-rao"/>
+                                    <constraint firstAttribute="width" secondItem="fSy-Ig-gbM" secondAttribute="height" multiplier="1:1" id="HW0-Ee-y4X"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal" image="RecordLogo.png">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="recordButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mOL-Km-ZZb"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R84-RU-Dvx" userLabel="Swap Button">
+                                <rect key="frame" x="10" y="54" width="75" height="75"/>
+                                <accessibility key="accessibilityConfiguration" label="Swap Button">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="bSs-7d-u7c"/>
+                                    <constraint firstAttribute="width" constant="75" id="dM8-Ry-pIc"/>
+                                    <constraint firstAttribute="width" secondItem="R84-RU-Dvx" secondAttribute="height" multiplier="1:1" id="ydq-lc-tyO"/>
+                                </constraints>
+                                <state key="normal" image="RotateCamera.png"/>
+                                <connections>
+                                    <action selector="swapButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="koZ-En-4MH"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gE-Yb-UV0" userLabel="Flash Button">
+                                <rect key="frame" x="32.5" y="139" width="30" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="FHf-ne-T0r"/>
+                                    <constraint firstAttribute="height" constant="50" id="d4i-aq-CnR"/>
+                                </constraints>
+                                <state key="normal" image="LightningLight.png"/>
+                                <connections>
+                                    <action selector="flashButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vpl-GJ-T0a"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0x2-uT-kEM" userLabel="Camera Roll Button">
+                                <rect key="frame" x="22.5" y="787" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="1VQ-Bm-Zon"/>
+                                    <constraint firstAttribute="width" secondItem="0x2-uT-kEM" secondAttribute="height" multiplier="1:1" id="hLA-tQ-q6s"/>
+                                    <constraint firstAttribute="height" constant="50" id="z2x-YR-OX3"/>
+                                </constraints>
+                                <state key="normal" image="CameraRoll.png"/>
+                                <connections>
+                                    <action selector="cameraRollButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bv7-Rm-O6L"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="top" secondItem="R84-RU-Dvx" secondAttribute="bottom" constant="10" id="5jS-lN-OAD"/>
+                            <constraint firstItem="fSy-Ig-gbM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="5nz-Sh-T1b"/>
+                            <constraint firstItem="0x2-uT-kEM" firstAttribute="centerY" secondItem="fSy-Ig-gbM" secondAttribute="centerY" id="6xw-ZT-W4R"/>
+                            <constraint firstItem="eLi-zP-Jun" firstAttribute="centerX" secondItem="fSy-Ig-gbM" secondAttribute="centerX" id="8sC-0A-i7k"/>
+                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="centerX" secondItem="R84-RU-Dvx" secondAttribute="centerX" id="9uY-ca-8yM"/>
+                            <constraint firstItem="fSy-Ig-gbM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="157" id="ELR-3o-fr7"/>
+                            <constraint firstItem="0x2-uT-kEM" firstAttribute="centerX" secondItem="R84-RU-Dvx" secondAttribute="centerX" id="Myu-I0-G2P"/>
+                            <constraint firstItem="Hrp-q7-98m" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="PF1-JD-QMo"/>
+                            <constraint firstItem="Hrp-q7-98m" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Qny-k3-6Rv"/>
+                            <constraint firstItem="R84-RU-Dvx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="SBL-pS-QKR"/>
+                            <constraint firstItem="Hrp-q7-98m" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="YOV-jg-WdX"/>
+                            <constraint firstItem="R84-RU-Dvx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="pXO-YJ-TvI"/>
+                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="top" secondItem="R84-RU-Dvx" secondAttribute="bottom" constant="10" id="wIL-Ed-Vjl"/>
+                            <constraint firstItem="Hrp-q7-98m" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="yKB-G6-E4c"/>
+                            <constraint firstItem="eLi-zP-Jun" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="zUi-Ge-dYn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="cameraView" destination="Hrp-q7-98m" id="TU9-Fb-0B2"/>
+                        <outlet property="flashButton" destination="5gE-Yb-UV0" id="e1S-pz-Otg"/>
+                        <outlet property="recordButton" destination="fSy-Ig-gbM" id="Tzf-lV-fyM"/>
+                        <outlet property="swapButton" destination="R84-RU-Dvx" id="VB0-gf-xaF"/>
+                        <outlet property="timerLabel" destination="eLi-zP-Jun" id="0Dj-qG-vMz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="115.84821428571428"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="CameraRoll.png" width="400" height="373"/>
+        <image name="LightningLight.png" width="230" height="400"/>
+        <image name="RecordLogo.png" width="400" height="400"/>
+        <image name="RotateCamera.png" width="400" height="400"/>
+    </resources>
+</document>
