@@ -22,6 +22,7 @@
 		0021745823BBBD420076A07F /* LightningDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0021745623BBBD420076A07F /* LightningDark.png */; };
 		0021746223C57EDE0076A07F /* CameraRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 0021746123C57EDD0076A07F /* CameraRoll.png */; };
 		0021746423C580F30076A07F /* appiconmaker.co_ios (1) in Resources */ = {isa = PBXBuildFile; fileRef = 0021746323C580F30076A07F /* appiconmaker.co_ios (1) */; };
+		00D7B48323E92588003580BB /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D7B48223E92588003580BB /* RecordButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		0021745623BBBD420076A07F /* LightningDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightningDark.png; path = ../../../../Downloads/LightningDark.png; sourceTree = "<group>"; };
 		0021746123C57EDD0076A07F /* CameraRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CameraRoll.png; path = ../../../../Downloads/CameraRoll.png; sourceTree = "<group>"; };
 		0021746323C580F30076A07F /* appiconmaker.co_ios (1) */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "appiconmaker.co_ios (1)"; path = "../../../../Downloads/appiconmaker.co_ios (1)"; sourceTree = "<group>"; };
+		00D7B48223E92588003580BB /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecordButton.swift; path = ../../RecordButtonTest/Source/RecordButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				0021744823B977BA0076A07F /* Images */,
+				00D7B48223E92588003580BB /* RecordButton.swift */,
 				000D10FB23B5A9C700BED536 /* AppDelegate.swift */,
 				000D10FD23B5A9C700BED536 /* SceneDelegate.swift */,
 				000D10FF23B5A9C700BED536 /* ViewController.swift */,
@@ -185,6 +188,7 @@
 				000D10FC23B5A9C700BED536 /* AppDelegate.swift in Sources */,
 				000D10FE23B5A9C700BED536 /* SceneDelegate.swift in Sources */,
 				001B16A823E0EFE200A26654 /* Helper.swift in Sources */,
+				00D7B48323E92588003580BB /* RecordButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +333,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9NZH626LPT;
 				INFOPLIST_FILE = "PR Cam/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -337,7 +341,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -350,7 +354,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9NZH626LPT;
 				INFOPLIST_FILE = "PR Cam/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -358,7 +362,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

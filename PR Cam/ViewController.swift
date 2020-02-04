@@ -10,15 +10,16 @@ import UIKit
 import AVFoundation
 import ReplayKit
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, RecordButtonDelegate {
     
     // The view used to display the video
     @IBOutlet weak var cameraView: UIView!
     
     // The buttons for record and swap camera
-    @IBOutlet weak var recordButton: UIButton!
+    //@IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var swapButton: UIButton!
     @IBOutlet weak var flashButton: UIButton!
+    @IBOutlet weak var cameraRollButton: UIButton!
     
     // Label for the timer
     @IBOutlet weak var timerLabel: UILabel!
@@ -32,12 +33,16 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var frontOrBack: Bool = false
     
     // Bool indicating if the camera is recording - used for turn off bug
-    var isRecording: Bool = false
+    var recordingState: Bool = false
+    
+    // From GitHub - animated recording button
+    var recordButton: RecordButton!
     
     // For the camera timer
     var time = 0;
-    var timer = Timer();
+    var timer = Timer()
     
+    // Called when the application loads (once)
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -89,20 +94,32 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             print("Error creating video capture [initialization]!")
         }
     }
-
-    // When the record button is pressed
-    @IBAction func recordButtonPressed(_ sender: UIButton) {
-        // If the camera is not recording
-        if(!movieOutput.isRecording){
+    
+    // Create the animated recording button
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let recordButtonSide = self.view.bounds.size.height/10
+        recordButton = RecordButton(frame: CGRect(
+            x: self.view.bounds.width/2 - recordButtonSide/2,
+            y: self.view.bounds.height-recordButtonSide*1.5,
+            width: recordButtonSide,
+            height: recordButtonSide))
+        recordButton.delegate = self
+        self.view.addSubview(recordButton)
+    }
+    
+    // When the animated recording button is pressed
+    func tapButton(isRecording: Bool){
+        if(isRecording){
             // Update boolean flag
-            isRecording = true
+            self.recordingState = true
             
             //Start timer
             timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.action), userInfo: nil, repeats: true)
 
-            // Update image to clicked
-            sender.setImage(UIImage(named: "RecordingLogo"), for: .normal)
+            // Disable buttons while recording
             swapButton.isEnabled = false
+            cameraRollButton.isEnabled = false
             
             // Begin capture session
             captureSession.startRunning()
@@ -116,7 +133,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         // If the camera is recording
         else{
             //Update boolean flag
-            isRecording = false
+            self.recordingState = false
             
             // Turn off timer
             timer.invalidate()
@@ -124,8 +141,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             timerLabel.text = String(convertTime(time: time))
             
             // Update image to unclicked
-            sender.setImage(UIImage(named: "RecordLogo"), for: .normal)
             swapButton.isEnabled = true
+            cameraRollButton.isEnabled = true
 
             // Stop recording and create notification
             movieOutput.stopRecording()
@@ -133,12 +150,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    // Called when swap button pressed
+    // Called when swap button pressed - should be disabled by default
     @IBAction func swapButtonPressed(_ sender: UIButton){
-        // Stop capture and change record button back to normal
-        captureSession.stopRunning()
-        recordButton.setImage(UIImage(named: "RecordLogo"), for: .normal)
-        
         if frontOrBack{ //Front camera is connected
             do{
                 // Enable flash button
@@ -259,26 +272,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             self.present(videoEditor, animated: true, completion: nil)
         }
     }
-    
-    /* NOT IMPLEMENTED YET
-    @IBAction func prButtonPressed(_ sender: UIButton){
-        if(!isPrRecording){
-            print("Started screen recording")
-            recorder.startRecording(handler: nil)
-        }
-        else{
-            // Stop screen recording
-            print("Ended screen rcording")
-            recorder.stopRecording(handler: { (preview, error) in
-                if let temp = error{
-                    print("ERROR SAVING RECORDING")
-                    return
-                }
-                self.present(preview!, animated: true, completion: nil)
-            })
-        }
-        isPrRecording = !isPrRecording
-    } */
         
     // Disable the flash light in the event of a swap
     func disableFlash(){
@@ -332,15 +325,23 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     // Called when the application is moved into the background
     @objc func appMovedToBackground(){
-        // Save recording and enable camera swap if it was recording
-        if(isRecording){
+        if(recordingState){
             print("App turned off when recording.")
+            
+            // Force end recording in animated record button
+            recordButton.endRecording()
+            
             //Update boolean flag
-            isRecording = false
+            recordingState = false
+            
+            // Turn off timer
+            timer.invalidate()
+            time = 0
+            timerLabel.text = String(convertTime(time: time))
             
             // Update image to unclicked
-            recordButton.setImage(UIImage(named: "RecordLogo"), for: .normal)
             swapButton.isEnabled = true
+            cameraRollButton.isEnabled = true
 
             // Stop recording and create notification
             movieOutput.stopRecording()
