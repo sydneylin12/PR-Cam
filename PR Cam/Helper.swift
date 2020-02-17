@@ -21,3 +21,51 @@ func convertTime(time: Int) -> String{
     //print("\(minutes):\(seconds).\(ms)")
     return "\(minutes):\(seconds).\(hundreds)"
 }
+
+/*
+ ---UNUSED CODE---
+ 
+ @IBOutlet weak var cameraRollButton: UIButton!
+ @IBOutlet weak var prButton: UIButton!
+ 
+ // Enable and disable the overlay
+ var overlayEnabled: Bool = true
+ 
+ // Open the (video) camera roll
+ @IBAction func cameraRollButtonPressed(_ sender: UIButton){
+     if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+         let imagePicker = UIImagePickerController()
+         imagePicker.sourceType = .photoLibrary;
+         imagePicker.mediaTypes = ["public.movie"]
+         imagePicker.allowsEditing = true
+         imagePicker.delegate = self
+         self.present(imagePicker, animated: true, completion: nil)
+     }
+ }
+ 
+ @IBAction func prButtonPressed(_ sender: UIButton){
+     disableOverlay()
+ }
+ 
+ // Turn off the overlay if the PR button is pressed
+ func disableOverlay(){
+     if overlayEnabled{
+         //prButton.setImage(UIImage(named: "PR Cam Logo Dark"), for: .normal)
+         swapButton.isHidden = true
+         flashButton.isHidden = true
+         recordButton.isHidden = true
+         cameraRollButton.isHidden = true
+         timerLabel.isHidden = true
+     }
+     else{
+         //prButton.setImage(UIImage(named: "PR Cam Logo"), for: .normal)
+         swapButton.isHidden = false
+         flashButton.isHidden = false
+         recordButton.isHidden = false
+         cameraRollButton.isHidden = false
+         timerLabel.isHidden = false
+     }
+     overlayEnabled = !overlayEnabled
+ }
+ 
+ */

@@ -24,6 +24,8 @@
 	<string>Allow access to camera to film.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Allow this app to save videos to the camera roll.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow this app to record audio.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -64,5 +66,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
