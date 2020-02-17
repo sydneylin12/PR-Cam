@@ -2,8 +2,11 @@
 **By Sid Lin [sydney.lin12@gmail.com]**
 
 <p align="center">
+  <img src="https://img.shields.io/badge/iOS-13.0%2B-blue"/>
+  <img src="https://img.shields.io/badge/Swift-5.1-orange"/>
   <img src="https://img.shields.io/github/last-commit/sydneylin12/pr-cam"/>
-  <img src="https://img.shields.io/github/commit-activity/m/sydneylin12/pr-cam"/>
+  <img src="https://img.shields.io/github/repo-size/sydneylin12/pr-cam"/>
+  <img src="https://img.shields.io/badge/Downloads-300%2B-brightgreen"/>
 </p>
 
 ## Overview
