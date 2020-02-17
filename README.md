@@ -6,7 +6,9 @@
 
 **App Store Link: [click here](https://apps.apple.com/us/app/pr-cam/id1493299604?ls=1)**
 
-<img src="PR Cam Rounded.png" align="center"/>
+<p align="center">
+<img src="PR Cam Rounded.png" width="70" height="70"/>
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/iOS-13.0%2B-blue"/>
@@ -27,7 +29,7 @@ There is also a settings page with links to this page, a share button, and an em
 | :ballot_box_with_check: | PR Cam      
 | -------------- | ---------------------
 | :video_camera: | Record high quality videos             
-| :mag:          | iOS 13+
+| :gear:         | iOS 13+
 | :speaker:      | Background audio support
 | :repeat:       | Access to both cameras               
 | :zap:          | Rear camera flash  
