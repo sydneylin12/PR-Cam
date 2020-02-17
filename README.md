@@ -1,5 +1,12 @@
 # PR Cam
-**By Sid Lin [sydney.lin12@gmail.com]**
+
+**By Sid Lin**
+
+**Email: sydney.lin12@gmail.com**
+
+**App Store Link: [click here](https://apps.apple.com/us/app/pr-cam/id1493299604?ls=1)**
+
+<img src="PR Cam Rounded.png" align="center"/>
 
 <p align="center">
   <img src="https://img.shields.io/badge/iOS-13.0%2B-blue"/>
