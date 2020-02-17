@@ -1,4 +1,4 @@
-# PR-Cam
+# PR Cam
 **By Sid Lin [sydney.lin12@gmail.com]**
 
 <p align="center">
