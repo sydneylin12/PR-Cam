@@ -11,7 +11,7 @@ import AVFoundation
 import ReplayKit
 import Photos
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, RecordButtonDelegate {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  UINavigationControllerDelegate, RecordButtonDelegate {
     
     // The view used to display the video
     @IBOutlet weak var mainView: UIView!
@@ -28,32 +28,39 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
     var captureSession: AVCaptureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
     var movieOutput: AVCaptureMovieFileOutput = AVCaptureMovieFileOutput()
+    var currentDevice: AVCaptureDevice! // Used for pinch feature
         
-    // Controls the side of the camera and flash
-    var frontOrBack: Bool = false
+    // Indicate the state of the camera and currently recording
+    var cameraPosition: CameraPosition = CameraPosition.BACK
+    var recordingState: Bool = false // Can be kept as a boolean
     
-    // Turn recording volume/audio off by default
-    var isAudioEnabled: Bool = false
-    
-    // Bool indicating if the camera is recording - used for turn off bug
-    var recordingState: Bool = false
-    
-    // For the camera timer
+    // Variables for the camera timer
     var time = 0
     var timer = Timer()
     
+    // Constants and variable for zoom
+    let minZoom: CGFloat = 1.0
+    let maxZoom: CGFloat = 3.0
+    var lastZoomFactor: CGFloat = 1.0
+    
     // Called when the application loads (once)
     override func viewDidLoad() {
+        //print("View Controller - View Did Load")
         super.viewDidLoad()
 
         // Change label font for monospace
         timerLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 28, weight: UIFont.Weight.regular)
         timerLabel.text = String(convertTime(time: time))
         
-        // Detect double taps
+        // Detect double taps and upward swipe
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
+        swipeUp.direction = UISwipeGestureRecognizer.Direction.up
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinch(_:)))
         view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(swipeUp)
+        view.addGestureRecognizer(pinch)
         
         // Add handler for background
         let notificationCenter = NotificationCenter.default
@@ -62,56 +69,23 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
         // Disable screen timeout
         UIApplication.shared.isIdleTimerDisabled = true
         
-        // Configure the shared audio session and ENABLE mixing audio (play and record)
-        captureSession.automaticallyConfiguresApplicationAudioSession = false
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .defaultToSpeaker])
-            try AVAudioSession.sharedInstance().setActive(true)
-        }
-        catch let error as NSError {
-            print("Error coniguring shared audio session. \(error)")
-        }
+        // Force dark theme for camera layout only
+        overrideUserInterfaceStyle = .dark
         
-        do {
-            // Create camera device for back camera
-            let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-            
-            // Add video input
-            let input = try AVCaptureDeviceInput(device: backCamera!)
-            captureSession.addInput(input)
-            
-            // Create preview video frame for screen
-            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer.frame = view.layer.bounds
-            
-            // Not sure what this does (set bounds to whole screen)
-            previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            mainView.layer.addSublayer(previewLayer)
-            
-            // Add movie file output
-            captureSession.addOutput(movieOutput)
-            
-            // Add audio output to file
-            let audioInput = AVCaptureDevice.default(for: AVMediaType.audio)
-            try captureSession.addInput(AVCaptureDeviceInput(device: audioInput!))
-            
-            // Begin capture session - need to get preview of camera
-            captureSession.startRunning()
-        }
-        catch let error {
-            print("Error creating video capture initialization. \(error)")
-        }
+        // Finally, configure the session
+        configureSession(frontOrBack: cameraPosition)
     }
         
     // Initialize the animated record button
     override func viewDidAppear(_ animated: Bool) {
+        //print("View Controller - View Did Appear")
         super.viewDidAppear(animated)
         recordButton.delegate = self
     }
-    
+
     // When the animated recording button is pressed
     func tapButton(isRecording: Bool) {
-        if(isRecording){
+        if(isRecording) {
             // Update boolean flag
             self.recordingState = true
             
@@ -145,67 +119,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
     
     // Called when swap button pressed - should be disabled by default
     @IBAction func swapButtonPressed(_ sender: UIButton) {
-        if frontOrBack{ //Front camera is connected
-            do{
-                // Enable flash button
-                flashButton.isEnabled = true
-                
-                // Create a new capture session (repeat of first code block)
-                captureSession = AVCaptureSession()
-                let cam = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-
-                let input = try AVCaptureDeviceInput(device: cam!)
-                captureSession.addInput(input)
-                
-                // Create preview video frame for screen
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                previewLayer.frame = view.layer.bounds
-                
-                // Not sure what this does (set bounds to whole screen)
-                previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-                mainView.layer.addSublayer(previewLayer)
-                
-                // Add movie file output
-                movieOutput = AVCaptureMovieFileOutput()
-                captureSession.addOutput(movieOutput)
-                captureSession.startRunning()
-            }
-            catch{
-                print("Error switching to front camera")
-            }
+        if cameraPosition == CameraPosition.FRONT {
+            cameraPosition = CameraPosition.BACK
         }
-        else{ // Back camera is currently connected
-            do{
-                // Disable the flash for front camera
-                flashButton.isEnabled = false
-                disableFlash()
-                
-                // Create a new capture session (repeat of first code block)
-                captureSession = AVCaptureSession()
-                let cam = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-
-                let input = try AVCaptureDeviceInput(device: cam!)
-                captureSession.addInput(input)
-                
-                // Create preview video frame for screen
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                previewLayer.frame = view.layer.bounds
-                
-                // Not sure what this does (set bounds to whole screen)
-                previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-                mainView.layer.addSublayer(previewLayer)
-                
-                // Add movie file output
-                movieOutput = AVCaptureMovieFileOutput()
-                captureSession.addOutput(movieOutput)
-                captureSession.startRunning()
-            }
-            catch{
-                print("Error switching to front camera")
-            }
+        else if cameraPosition == CameraPosition.BACK {
+            cameraPosition = CameraPosition.FRONT
         }
-        // Change the bool toggle for camera side
-        frontOrBack = !frontOrBack
+        else {
+            print("Error in swapping cameras - this should never happen!")
+        }
+        // Configure the new session after swapping
+        configureSession(frontOrBack: cameraPosition)
     }
     
     // Activates the flash for recording
@@ -248,6 +172,54 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
     @IBAction func settingsButtonPressed(_ sender: UIButton) {
         performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
+    
+    // Called when the file output is saved (similar to a callback)
+    // "Informs the delegate when all pending data has been written to an output file"
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        //print("File saved!")
+        if error == nil {
+            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
+        }
+    }
+    
+    // Code to configure the camera session with an enum value of FRONT or BACK
+    func configureSession(frontOrBack: CameraPosition) {
+        do {
+            // MUST RESET CAPTURE SESSION TO PREVENT EXCEPTIONS (MULTIPLE DEVICES)
+            captureSession = AVCaptureSession()
+            
+            // Re-configure the audio with mixing
+            captureSession.automaticallyConfiguresApplicationAudioSession = false
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .defaultToSpeaker])
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            var camera: AVCaptureDevice? = nil
+            if cameraPosition == CameraPosition.FRONT {
+                camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)!
+            }
+            else if cameraPosition == CameraPosition.BACK {
+                camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+            }
+            else {
+                print("This should never happen!")
+            }
+            currentDevice = camera // Update current capture device
+            let input = try AVCaptureDeviceInput(device: camera!)
+            captureSession.addInput(input)
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            previewLayer.frame = view.layer.bounds // Resize to fit screen
+            previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            mainView.layer.addSublayer(previewLayer)
+            movieOutput = AVCaptureMovieFileOutput() // NEED TO RE INIT TO PREVENT EXCEPTION
+            captureSession.addOutput(movieOutput)
+            let audioInput = AVCaptureDevice.default(for: AVMediaType.audio)
+            try captureSession.addInput(AVCaptureDeviceInput(device: audioInput!))
+            captureSession.startRunning()
+        }
+        catch {
+            print("Error configuring capture session: \(error)")
+        }
+    }
         
     // Disable the flash light in the event of a swap
     func disableFlash() {
@@ -271,32 +243,52 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
         }
     }
     
-    // Called when the file output is saved (similar to a callback)
-    // "Informs the delegate when all pending data has been written to an output file"
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        //print("File saved!")
-        if error == nil {
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-        }
-    }
-    
-    // TODO
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        print("Video picked from image controller!")
-        // Dictionary that contains the file URL if a video is picked
-        for (key, value) in info{
-            print(type(of: key))
-            print(type(of: value))
-            print("KEY: \(key) \nVALUE: \(value)")
-        }
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     // Create an alert when the video is finished
     func createAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in alert.dismiss(animated: true, completion: nil) }))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    // Handle the pinch gesture to zoom the camera
+    @objc func pinch(_ pinch: UIPinchGestureRecognizer) {
+        
+        // Return zoom factor using current capture device
+        func minMaxZoom(_ factor: CGFloat) -> CGFloat {
+            return min(min(max(factor, minZoom), maxZoom), (currentDevice.activeFormat.videoMaxZoomFactor))
+        }
+        
+        // Update the camera's zoom using current device
+        func update(scale factor: CGFloat) {
+            do {
+                try currentDevice.lockForConfiguration()
+                defer { currentDevice.unlockForConfiguration() }
+                currentDevice.videoZoomFactor = factor
+            }
+            catch {
+                print("Error updating zoom factor: \(error)")
+            }
+        }
+        
+        // Get pinch setting from user default data
+        let defaults = UserDefaults.standard
+        var isPinchEnabled: Bool = true
+        if defaultsHasKey(key: "IsPinchEnabled") {
+            isPinchEnabled = defaults.object(forKey: "IsPinchEnabled") as! Bool
+        }
+        if !isPinchEnabled {
+            return // Return out if pinching to zoom is disabled
+        }
+        
+        let newFactor = minMaxZoom(pinch.scale * lastZoomFactor)
+        if pinch.state == .changed {
+            update(scale: newFactor)
+        }
+        else if pinch.state == .ended {
+            lastZoomFactor = minMaxZoom(newFactor)
+            update(scale: lastZoomFactor)
+        }
+        
     }
     
     // Run the timer
@@ -305,12 +297,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UI
         timerLabel.text = String(convertTime(time: time))
     }
     
-    // Handle double tap on camera
+    // Handle gestures such as double tap and swipes
     @objc func doubleTapped() {
         // Cannot swap while recording
         if(!movieOutput.isRecording){
             swapButtonPressed(swapButton)
         }
+    }
+    
+    // Open the settings menu with an up swipe
+    @objc func swipedUp() {
+        performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
     
     // Called when the application is moved into the background

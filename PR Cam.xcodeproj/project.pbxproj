@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0002867E23FA4193000C9BF8 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 0002867D23FA4193000C9BF8 /* Settings.png */; };
 		0002868023FA4598000C9BF8 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0002867F23FA4598000C9BF8 /* SettingsTableViewController.swift */; };
+		0002868723FCF39C000C9BF8 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0002868623FCF39C000C9BF8 /* StoreKit.framework */; };
 		000D10FC23B5A9C700BED536 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D10FB23B5A9C700BED536 /* AppDelegate.swift */; };
 		000D10FE23B5A9C700BED536 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D10FD23B5A9C700BED536 /* SceneDelegate.swift */; };
 		000D110023B5A9C700BED536 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D10FF23B5A9C700BED536 /* ViewController.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		0002867D23FA4193000C9BF8 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Settings.png; path = ../../../Photos/Settings.png; sourceTree = "<group>"; };
 		0002867F23FA4598000C9BF8 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		0002868623FCF39C000C9BF8 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		000D10F823B5A9C700BED536 /* PR Cam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PR Cam.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		000D10FB23B5A9C700BED536 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		000D10FD23B5A9C700BED536 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,17 +57,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0002868723FCF39C000C9BF8 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0002868323FCF381000C9BF8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0002868623FCF39C000C9BF8 /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		000D10EF23B5A9C700BED536 = {
 			isa = PBXGroup;
 			children = (
 				000D10FA23B5A9C700BED536 /* PR Cam */,
 				000D10F923B5A9C700BED536 /* Products */,
+				0002868323FCF381000C9BF8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -349,7 +361,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -370,7 +382,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -118,25 +118,35 @@
                         <sections>
                             <tableViewSection headerTitle="Settings" id="dER-bM-3Ba">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="5Hj-0X-l9d">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="5Hj-0X-l9d">
                                         <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Hj-0X-l9d" id="9S5-N7-jiC">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BS3-Ol-q5q">
-                                                    <rect key="frame" x="20" y="11.5" width="108" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pinch to Zoom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BS3-Ol-q5q">
+                                                    <rect key="frame" x="20" y="11.5" width="111.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kt5-ns-ma3">
+                                                    <rect key="frame" x="305" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onPinchChanged:" destination="wOk-uG-oBO" eventType="touchUpInside" id="MNj-tZ-c8I"/>
+                                                    </connections>
+                                                </switch>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="kt5-ns-ma3" secondAttribute="trailing" constant="20" id="06k-Ts-h6g"/>
                                                 <constraint firstItem="BS3-Ol-q5q" firstAttribute="leading" secondItem="9S5-N7-jiC" secondAttribute="leadingMargin" id="B2G-fp-irc"/>
+                                                <constraint firstItem="kt5-ns-ma3" firstAttribute="centerY" secondItem="9S5-N7-jiC" secondAttribute="centerY" id="MBl-b2-aSZ"/>
+                                                <constraint firstItem="kt5-ns-ma3" firstAttribute="leading" secondItem="BS3-Ol-q5q" secondAttribute="trailing" constant="173.5" id="YK0-AQ-QH2"/>
                                                 <constraint firstItem="BS3-Ol-q5q" firstAttribute="centerY" secondItem="9S5-N7-jiC" secondAttribute="centerY" id="zDc-o6-Ovl"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -159,8 +169,10 @@
                                             <constraints>
                                                 <constraint firstItem="6KU-vM-eK3" firstAttribute="leading" secondItem="9MO-Az-aUo" secondAttribute="leadingMargin" id="0Mo-Fh-c8p"/>
                                                 <constraint firstItem="6KU-vM-eK3" firstAttribute="centerY" secondItem="9MO-Az-aUo" secondAttribute="centerY" id="MU5-13-uGB"/>
+                                                <constraint firstItem="6KU-vM-eK3" firstAttribute="trailing" secondItem="9MO-Az-aUo" secondAttribute="trailingMargin" constant="-242" id="rkh-UY-IkR"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="8JI-0l-6in">
                                         <rect key="frame" x="20" y="198.5" width="374" height="43.5"/>
@@ -178,9 +190,11 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="It3-ly-wTv" firstAttribute="centerY" secondItem="bbF-cA-88c" secondAttribute="centerY" id="qz1-AH-elw"/>
+                                                <constraint firstItem="It3-ly-wTv" firstAttribute="trailing" secondItem="bbF-cA-88c" secondAttribute="trailingMargin" constant="-270" id="xvK-cR-XtP"/>
                                                 <constraint firstItem="It3-ly-wTv" firstAttribute="leading" secondItem="bbF-cA-88c" secondAttribute="leadingMargin" id="zco-fr-vf5"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="jcU-Ei-FTK">
                                         <rect key="frame" x="20" y="242" width="374" height="43.5"/>
@@ -199,8 +213,10 @@
                                             <constraints>
                                                 <constraint firstItem="IsQ-od-xPM" firstAttribute="centerY" secondItem="gFd-3z-har" secondAttribute="centerY" id="AaZ-nc-DFv"/>
                                                 <constraint firstItem="IsQ-od-xPM" firstAttribute="leading" secondItem="gFd-3z-har" secondAttribute="leadingMargin" id="qiG-D7-ACN"/>
+                                                <constraint firstItem="IsQ-od-xPM" firstAttribute="trailing" secondItem="gFd-3z-har" secondAttribute="trailingMargin" constant="-254" id="ycz-SO-U50"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -222,17 +238,75 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SiD-jE-Lcg" userLabel="Version Number">
                                                     <rect key="frame" x="330" y="11.5" width="24" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="xb0-UP-nxY" firstAttribute="centerY" secondItem="SEL-1z-VIX" secondAttribute="centerY" id="Da2-L2-Pvi"/>
+                                                <constraint firstItem="SiD-jE-Lcg" firstAttribute="leading" secondItem="xb0-UP-nxY" secondAttribute="trailing" constant="253" id="b6v-e1-h01"/>
                                                 <constraint firstItem="xb0-UP-nxY" firstAttribute="leading" secondItem="SEL-1z-VIX" secondAttribute="leadingMargin" id="ksu-Me-yfR"/>
                                                 <constraint firstItem="SiD-jE-Lcg" firstAttribute="centerY" secondItem="SEL-1z-VIX" secondAttribute="centerY" id="rg2-P1-ETw"/>
                                                 <constraint firstItem="SiD-jE-Lcg" firstAttribute="trailing" secondItem="SEL-1z-VIX" secondAttribute="trailingMargin" id="vCL-3e-9Qm"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="PR Cam Pro" id="1fK-0i-ggu">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" id="RYH-1H-tDb">
+                                        <rect key="frame" x="20" y="441" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RYH-1H-tDb" id="Oio-Kt-jfj">
+                                            <rect key="frame" x="0.0" y="0.0" width="311" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchase PR Cam Pro" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d2j-uI-hbS">
+                                                    <rect key="frame" x="20" y="11.5" width="167" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="d2j-uI-hbS" firstAttribute="trailing" secondItem="Oio-Kt-jfj" secondAttribute="trailingMargin" constant="-116" id="FWG-k1-QnO"/>
+                                                <constraint firstItem="d2j-uI-hbS" firstAttribute="leading" secondItem="Oio-Kt-jfj" secondAttribute="leadingMargin" id="SKK-6r-OmP"/>
+                                                <constraint firstItem="d2j-uI-hbS" firstAttribute="centerY" secondItem="Oio-Kt-jfj" secondAttribute="centerY" id="gOe-ul-ZdL"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="hd3-yc-EBa">
+                                        <rect key="frame" x="20" y="484.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hd3-yc-EBa" id="agn-Qq-ueN">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pro Theme" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8jd-DC-tfZ">
+                                                    <rect key="frame" x="20" y="11.5" width="83.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="WTY-s2-WHi">
+                                                    <rect key="frame" x="305" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onThemeChanged:" destination="wOk-uG-oBO" eventType="touchUpInside" id="gcq-0Z-JlU"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="8jd-DC-tfZ" firstAttribute="centerY" secondItem="agn-Qq-ueN" secondAttribute="centerY" id="3Jd-Kc-Zfs"/>
+                                                <constraint firstAttribute="trailing" secondItem="WTY-s2-WHi" secondAttribute="trailing" constant="20" id="TPb-nK-xyf"/>
+                                                <constraint firstItem="WTY-s2-WHi" firstAttribute="centerY" secondItem="agn-Qq-ueN" secondAttribute="centerY" id="VQD-hz-Lrp"/>
+                                                <constraint firstItem="WTY-s2-WHi" firstAttribute="leading" secondItem="8jd-DC-tfZ" secondAttribute="trailing" constant="201.5" id="mTM-Ie-HaK"/>
+                                                <constraint firstItem="8jd-DC-tfZ" firstAttribute="leading" secondItem="agn-Qq-ueN" secondAttribute="leadingMargin" id="z8l-3S-dqe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -243,6 +317,11 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="pinchSwitch" destination="kt5-ns-ma3" id="kkm-0V-Lv9"/>
+                        <outlet property="proSwitch" destination="WTY-s2-WHi" id="jqz-Xa-GZb"/>
+                        <outlet property="proToggleCell" destination="hd3-yc-EBa" id="7gP-Ql-ZMn"/>
+                        <outlet property="purchaseProCell" destination="RYH-1H-tDb" id="9Wc-ug-umb"/>
+                        <outlet property="settingsTableCell" destination="5Hj-0X-l9d" id="6lh-lb-x8H"/>
                         <outlet property="versionLabel" destination="SiD-jE-Lcg" id="aIA-bQ-emB"/>
                     </connections>
                 </tableViewController>

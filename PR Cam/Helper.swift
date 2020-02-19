@@ -10,6 +10,18 @@
 // Mainly used to clean up the ViewController.swift file
 import Foundation
 
+// Enum for handing camera position
+public enum CameraPosition {
+    case FRONT
+    case BACK
+}
+
+// Enum for the current theme
+public enum AppTheme: Int {
+    case LIGHT = 0
+    case DARK = 1
+}
+
 // Handle time conversion from hundreds of seconds to formatted time
 func convertTime(time: Int) -> String{
     var t = time
@@ -20,6 +32,42 @@ func convertTime(time: Int) -> String{
     let hundreds = String(format: "%02d", t)
     //print("\(minutes):\(seconds).\(ms)")
     return "\(minutes):\(seconds).\(hundreds)"
+}
+
+// Check if the data has been saved to defaults (persistent data)
+public func defaultsHasKey(key: String) -> Bool {
+    return UserDefaults.standard.object(forKey: key) != nil
+}
+
+// Class to hold settings and pro mode
+public class Settings {
+    private static var isProEnabled: Bool = true
+    private static var currentTheme: AppTheme = AppTheme.LIGHT
+    
+    // Getter for pro mode enabled or not
+    public static func getPro() -> Bool {
+        return isProEnabled
+    }
+    
+    // Setter for "global" static variable
+    public static func setPro(b: Bool) {
+        isProEnabled = b
+    }
+    
+    public static func getTheme() -> AppTheme {
+        return currentTheme
+    }
+    
+    public static func setTheme(theme: AppTheme) {
+        currentTheme = theme
+    }
+    
+    //static func saveData(){
+        //let defaults = UserDefaults.standard
+        //let theme = currentTheme == AppTheme.LIGHT ? false : true
+        //defaults.set(false, forKey: "isPro")
+        //defaults.set(theme, forKey: "ProTheme")
+    //}
 }
 
 /*
@@ -68,4 +116,15 @@ func convertTime(time: Int) -> String{
      overlayEnabled = !overlayEnabled
  }
  
+ // TODO
+ func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+     print("Video picked from image controller!")
+     // Dictionary that contains the file URL if a video is picked
+     for (key, value) in info{
+         print(type(of: key))
+         print(type(of: value))
+         print("KEY: \(key) \nVALUE: \(value)")
+     }
+     self.dismiss(animated: true, completion: nil)
+ }
  */
