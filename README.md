@@ -33,6 +33,9 @@ There is also a settings page with links to this page, a share button, and an em
 | :speaker:      | Background audio support
 | :repeat:       | Access to both cameras               
 | :zap:          | Rear camera flash  
+| :ok_hand:      | Pinch to zoom
+| :dollar:       | In-app purchases
+| :red_circle:   | Pro theme
 
 
 ## Requirements
