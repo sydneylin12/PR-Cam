@@ -2,7 +2,7 @@
 
 **By Sid Lin**
 
-**Email: sydney.lin12@gmail.com**
+**Email: sydney.lin12@gmail.com, linx1052@umn.edu**
 
 **App Store Link: [click here](https://apps.apple.com/us/app/pr-cam/id1493299604?ls=1)**
 
@@ -18,13 +18,16 @@
   <img src="https://img.shields.io/badge/Downloads-300%2B-brightgreen"/>
 </p>
 
-## Overview
+## News :tada:
+PR Cam has reached over 500 downloads!
+
+## Overview :page_with_curl:
 
 PR Cam is an app that lets users film videos while listening to music. This is achieved by configuring the application's capture session to mix audio with other sources instead of canceling out the output to use the microphone. This app features a few features in common with that of a regular camera: an animated record button, flash, and flipping the camera.
 
 There is also a settings page with links to this page, a share button, and an email button. More updates are coming in the future!
 
-## Features
+## Features :mag:
 
 | :ballot_box_with_check: | PR Cam      
 | -------------- | ---------------------
@@ -33,16 +36,20 @@ There is also a settings page with links to this page, a share button, and an em
 | :speaker:      | Background audio support
 | :repeat:       | Access to both cameras               
 | :zap:          | Rear camera flash  
+| :fast_forward: | Animated buttons
 | :ok_hand:      | Pinch to zoom
+| :clock1:       | Display film time
 | :dollar:       | In-app purchases
 | :red_circle:   | Pro theme
 
 
-## Requirements
+## Requirements :heavy_exclamation_mark:
 * iOS 13.0+
 
-## Issues & Updates
+## Issues & Updates :warning:
 * The audio briefly stops when the app is launched or moved to the background. 
-  - This is because the app has to re-configure the audio every time it is launched since it does not use the default iOS settings. 
-* The app is set to light theme.
-  - There will be an update re-working the theme in the future.
+  - This is because the app has to re-configure the audio every time it is launched since it does not use the default iOS settings.
+* The audio gets particularly laggy when swapping cameras quickly.
+  - Exit the app and restart it. Since the app has to configure the phone's audio to record and also be able to play music, it might get a bit buggy sometimes.
+* The app does not save videos 100% of the time.
+  - I have updated the "Video Saved" notification to display if the app has saved with an error. Currently working to fix this bug. Reinstalling the app could be a potential solution as well.
