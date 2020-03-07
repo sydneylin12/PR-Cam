@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import ReplayKit
 import Photos
+import StoreKit
 
 class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  UINavigationControllerDelegate, RecordButtonDelegate {
     
@@ -19,6 +20,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     // UIButtons for swap, flash, camera roll
     @IBOutlet weak var swapButton: UIButton!
     @IBOutlet weak var flashButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton!
     
     // Label for the timer and animated record button custom class
     @IBOutlet weak var timerLabel: UILabel!
@@ -55,6 +57,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         // Detect double taps and upward swipe
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
+        
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
         swipeUp.direction = UISwipeGestureRecognizer.Direction.up
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinch(_:)))
@@ -68,19 +71,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         
         // Disable screen timeout
         UIApplication.shared.isIdleTimerDisabled = true
-        
-        // Force dark theme for camera layout only
-        overrideUserInterfaceStyle = .dark
-        
+                
         // Finally, configure the session
-        configureSession(frontOrBack: cameraPosition)
+        configureSession()
     }
         
     // Initialize the animated record button
     override func viewDidAppear(_ animated: Bool) {
-        //print("View Controller - View Did Appear")
         super.viewDidAppear(animated)
         recordButton.delegate = self
+    }
+    
+    // Force dark status bar only (NOT THEME)
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .darkContent
     }
 
     // When the animated recording button is pressed
@@ -101,24 +105,21 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
             try? FileManager.default.removeItem(at: fileUrl)
             movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
         }
-        // If the camera is recording
-        else{
-            //Update boolean flag
+        else{ // If the camera is recording
             self.recordingState = false
             
-            // Turn off timer
+            // Turn off timer and reset
             timer.invalidate()
             time = 0
             timerLabel.text = String(convertTime(time: time))
             
             // Stop recording and create notification
             movieOutput.stopRecording()
-            createAlert(title: "Video Saved", message: "The video has been saved to your camera roll.")
         }
     }
     
     // Called when swap button pressed - should be disabled by default
-    @IBAction func swapButtonPressed(_ sender: UIButton) {
+    @IBAction func swapPressed(_ sender: UIButton) {
         if cameraPosition == CameraPosition.FRONT {
             cameraPosition = CameraPosition.BACK
         }
@@ -128,12 +129,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         else {
             print("Error in swapping cameras - this should never happen!")
         }
-        // Configure the new session after swapping
-        configureSession(frontOrBack: cameraPosition)
+        // Re configure camera only
+        configureCameraSwap()
     }
     
     // Activates the flash for recording
-    @IBAction func flashButtonPressed(_ sender: UIButton) {
+    @IBAction func flashPressed(_ sender: UIButton) {
+        sender.pulse() // Play a pulse animation when flash is clicked
         let device = AVCaptureDevice.default(for: AVMediaType.video)
         
         // If the device has a flash light
@@ -169,21 +171,38 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     }
     
     // Go to the settings/info/about page
-    @IBAction func settingsButtonPressed(_ sender: UIButton) {
+    @IBAction func settingsPressed(_ sender: UIButton) {
+        // Rotate the cog settings button CW
+        UIView.animate(withDuration: 0.25, animations: {
+            sender.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
+        })
+        // Reset the animation angle to 0
+        sender.transform = CGAffineTransform(rotationAngle: 0)
         performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
     
     // Called when the file output is saved (similar to a callback)
     // "Informs the delegate when all pending data has been written to an output file"
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        //print("File saved!")
         if error == nil {
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
+            // Save the video with a completion selector
+            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(video(videoPath:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
+    // Handle when the file finishes saving
+    @objc func video(videoPath: String, didFinishSavingWithError error: NSError?, contextInfo info: UnsafeMutableRawPointer) {
+        if(error == nil) {
+            createAlert(title: "Video Saved", message: "The video has been saved to the camera roll.")
+        }
+        else {
+            createAlert(title: "Error", message: "Please go to settings and grant PR Cam access to save to the photo library.")
+        }
+    }
+    
+    
     // Code to configure the camera session with an enum value of FRONT or BACK
-    func configureSession(frontOrBack: CameraPosition) {
+    func configureSession() {
         do {
             // MUST RESET CAPTURE SESSION TO PREVENT EXCEPTIONS (MULTIPLE DEVICES)
             captureSession = AVCaptureSession()
@@ -220,6 +239,37 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
             print("Error configuring capture session: \(error)")
         }
     }
+    
+    // Only swap the camera without configuring the audio
+    func configureCameraSwap() {
+        blur() // Blur/fade in animation on camera swap
+        for input in captureSession.inputs { // Only remove camera inputs
+            let desc: String = input.description
+            if !desc.contains("Microphone") {
+                captureSession.removeInput(input)
+            }
+        }
+        
+        // Set default to back camera
+        var newCamera: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+        if cameraPosition == CameraPosition.FRONT {
+            newCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)!
+            disableFlash() // Turn off in case flash is currently on
+            flashButton.isEnabled = false
+        }
+        else {
+            // Enable flash button on back camera only
+            flashButton.isEnabled = true
+        }
+        
+        do { // Re-add the capture input and play a flip animation
+            try captureSession.addInput(AVCaptureDeviceInput(device: newCamera))
+            UIView.transition(with: swapButton, duration: 0.3, options: .transitionFlipFromLeft, animations: nil, completion: nil)
+        }
+        catch {
+            print("Error adding swapped camera input to capture session.")
+        }
+    }
         
     // Disable the flash light in the event of a swap
     func disableFlash() {
@@ -246,11 +296,40 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     // Create an alert when the video is finished
     func createAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in alert.dismiss(animated: true, completion: nil) }))
+        
+        // Request a review when the alert is dismissed
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+            // On dismiss handler here
+            (action) in alert.dismiss(animated: true, completion: {
+                if hasKey(key: "IsProEnabled") {
+                    // Do not present in app review for pro users
+                    let proUser: Bool = getValue(key: "IsProEnabled") as! Bool
+                    if !proUser { // If pro is not enabled
+                        SKStoreReviewController.requestReview()
+                    }
+                }
+            })
+        }))
+        // Present the alert
         self.present(alert, animated: true, completion: nil)
     }
     
-    // Handle the pinch gesture to zoom the camera
+    // TODO: Toggle a blur effect for swapping
+    func blur() {
+        // Create a blur effect and blur view
+        let blurEffect = UIBlurEffect(style: .regular)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = self.view.bounds // Set bounds to whole screen
+        UIView.transition(with: self.mainView, duration: 0.75, options: .transitionCrossDissolve, animations: nil, completion: nil)
+        
+        /* Remove blur on animation completion
+        UIView.transition(with: self.mainView, duration: 0.3, options: .transitionFlipFromLeft, animations: {
+            //self.view.addSubview(blurView);
+        }, completion: { (dummy) in blurView.removeFromSuperview() } )
+        */
+    }
+    
+    // Handle the pinch gesture to zoom the camera (closure)
     @objc func pinch(_ pinch: UIPinchGestureRecognizer) {
         
         // Return zoom factor using current capture device
@@ -272,11 +351,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         
         // Get pinch setting from user default data
         let defaults = UserDefaults.standard
-        var isPinchEnabled: Bool = true
-        if defaultsHasKey(key: "IsPinchEnabled") {
-            isPinchEnabled = defaults.object(forKey: "IsPinchEnabled") as! Bool
+        var pinchEnabled: Bool = true
+        if hasKey(key: "PinchEnabled") {
+            pinchEnabled = defaults.object(forKey: "PinchEnabled") as! Bool
         }
-        if !isPinchEnabled {
+        if !pinchEnabled {
             return // Return out if pinching to zoom is disabled
         }
         
@@ -299,9 +378,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     
     // Handle gestures such as double tap and swipes
     @objc func doubleTapped() {
+        // Disable if turned off in settings
+        if hasKey(key: "DoubleTapEnabled") {
+            let b: Bool! = (getValue(key: "DoubleTapEnabled") as! Bool)
+            if !b {
+                return
+            }
+        }
+        
         // Cannot swap while recording
-        if(!movieOutput.isRecording){
-            swapButtonPressed(swapButton)
+        if !recordingState {
+            swapPressed(swapButton)
         }
     }
     

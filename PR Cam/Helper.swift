@@ -16,12 +16,6 @@ public enum CameraPosition {
     case BACK
 }
 
-// Enum for the current theme
-public enum AppTheme: Int {
-    case LIGHT = 0
-    case DARK = 1
-}
-
 // Handle time conversion from hundreds of seconds to formatted time
 func convertTime(time: Int) -> String{
     var t = time
@@ -35,39 +29,17 @@ func convertTime(time: Int) -> String{
 }
 
 // Check if the data has been saved to defaults (persistent data)
-public func defaultsHasKey(key: String) -> Bool {
+public func hasKey(key: String) -> Bool {
     return UserDefaults.standard.object(forKey: key) != nil
 }
 
-// Class to hold settings and pro mode
-public class Settings {
-    private static var isProEnabled: Bool = true
-    private static var currentTheme: AppTheme = AppTheme.LIGHT
-    
-    // Getter for pro mode enabled or not
-    public static func getPro() -> Bool {
-        return isProEnabled
-    }
-    
-    // Setter for "global" static variable
-    public static func setPro(b: Bool) {
-        isProEnabled = b
-    }
-    
-    public static func getTheme() -> AppTheme {
-        return currentTheme
-    }
-    
-    public static func setTheme(theme: AppTheme) {
-        currentTheme = theme
-    }
-    
-    //static func saveData(){
-        //let defaults = UserDefaults.standard
-        //let theme = currentTheme == AppTheme.LIGHT ? false : true
-        //defaults.set(false, forKey: "isPro")
-        //defaults.set(theme, forKey: "ProTheme")
-    //}
+// Get the value of a defaults key and return it
+public func getValue(key: String) -> Any {
+    return UserDefaults.standard.object(forKey: key)!
+}
+
+public func setKey(key: String, value: Any){
+    UserDefaults.standard.set(value, forKey: key)
 }
 
 /*

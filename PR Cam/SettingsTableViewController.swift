@@ -12,16 +12,28 @@ import StoreKit
 
 class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate, SKPaymentTransactionObserver {
     
-    //@IBOutlet weak var audioSwitch: UISwitch!
+    // Label indicating app version
     @IBOutlet weak var versionLabel: UILabel!
-    @IBOutlet weak var pinchSwitch: UISwitch!
-    @IBOutlet weak var proSwitch: UISwitch!
-    @IBOutlet weak var settingsTableCell: UITableViewCell!
+    
+    // Settings switches custom classes
+    @IBOutlet weak var pinchSwitch: SettingsSwitch!
+    @IBOutlet weak var doubleTapSwitch: SettingsSwitch!
+    @IBOutlet weak var proSwitch: SettingsSwitch!
+    
+    // PR Cam Pro table cell
     @IBOutlet weak var purchaseProCell: UITableViewCell!
+
+    // Disable highlighting for these
+    @IBOutlet weak var pinchCell: UITableViewCell!
+    @IBOutlet weak var doubleTapCell: UITableViewCell!
     @IBOutlet weak var proToggleCell: UITableViewCell!
     
     // IAP product ID
     let productID: String = "com.sydneylin.prcam.pro"
+    
+    let settingsKeys = ["PinchEnabled", "DoubleTapEnabled", "ProEnabled"]
+    // List of settings UI elements (array of switches to be toggled)
+    var settingsSwitches: Array<SettingsSwitch> = []
 
     // Called each time the segue is used/TableVC is loaded in
     override func viewDidLoad() {
@@ -33,14 +45,25 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         versionLabel.text = version
         
         // Disable highlighting for settings ONLY
-        settingsTableCell.selectionStyle = .none
+        pinchCell.selectionStyle = .none
+        doubleTapCell.selectionStyle = .none
         proToggleCell.selectionStyle = .none
+        
+        pinchSwitch.settingKey = "PinchEnabled"
+        doubleTapSwitch.settingKey = "DoubleTapEnabled"
+        proSwitch.settingKey = "ProTheme"
+        
+        // Append all switches to the list
+        settingsSwitches.append(pinchSwitch)
+        settingsSwitches.append(doubleTapSwitch)
+        settingsSwitches.append(proSwitch)
         
         // IAP observer
         SKPaymentQueue.default().add(self)
-        
-        // Finally, configure the default values
+                
+        // Finally, configure default values and settings switches
         configureDefaults()
+        configureSettings()
     }
     
     // Handle the payments
@@ -50,12 +73,27 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             if transaction.transactionState == .purchased {
                 print("Transaction succeeded!")
                 // Update the defaults to enable pro mode
+                SKPaymentQueue.default().finishTransaction(transaction)
+
+                // Enable pro features
                 let defaults = UserDefaults.standard
                 defaults.set(true, forKey: "IsProEnabled")
+                proToggleCell.isUserInteractionEnabled = true
+                proSwitch.thumbTintColor = UIColor.white
             }
             else if transaction.transactionState == .failed {
                 print("Transaction failed!")
                 SKPaymentQueue.default().finishTransaction(transaction)
+            }
+            else if transaction.transactionState == .restored {
+                SKPaymentQueue.default().finishTransaction(transaction)
+                print("Transaction restored!")
+                
+                // Enable pro features
+                let defaults = UserDefaults.standard
+                defaults.set(true, forKey: "IsProEnabled")
+                proToggleCell.isUserInteractionEnabled = true
+                proSwitch.thumbTintColor = UIColor.white
             }
         }
     }
@@ -65,10 +103,10 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         return 4
     }
 
-    // Return number of sections in each cell 0: 1, 1: 3, 2: 1, 3: 2
+    // Return number of sections in each cell 0: 1, 1: 3, 2: 1, 3: 3
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { // Settings
-            return 1
+            return 2
         }
         else if section == 1 { // Help & Support
             return 3
@@ -77,7 +115,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             return 1
         }
         else if section == 3 {
-            return 2
+            return 3
         }
         else {
             return 0
@@ -100,110 +138,98 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         else if a == 3 && idx == 0 {
             purchasePressed()
         }
+        else if a == 3 && idx == 1 {
+            print("Restoring")
+            restorePressed()
+        }
         // De-select after finished
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    // Triggered when pinch switch is changed
-    @IBAction func onPinchChanged(_ sender: UISwitch) {
-        configurePinch(isEnabled: sender.isOn)
-    }
-    
-    // Triggered when the pro theme switch is used
-    @IBAction func onThemeChanged(_ sender: UISwitch) {
-        if sender.isOn { // Turned on pro theme
-            configureTheme(theme: AppTheme.DARK)
-        }
-        else {
-            configureTheme(theme: AppTheme.LIGHT)
+    // Update the user defaults value when a switch is toggled
+    @IBAction func onSwitchChanged(_ sender: SettingsSwitch) {
+        setKey(key: sender.settingKey, value: sender.isOn)
+        if sender.settingKey == "ProTheme" {
+            configureTheme(isDark: sender.isOn)
         }
     }
     
     // Initialize the default values and configure the page
     func configureDefaults() {
         let defaults = UserDefaults.standard
-        if defaultsHasKey(key: "IsPinchEnabled") {
-            let b: Bool = defaults.object(forKey: "IsPinchEnabled") as! Bool
-            print("Pinch enabled status: \(b)")
-            configurePinch(isEnabled: b)
+        
+        // If keys do not exist, default them to true
+        if !hasKey(key: "PinchEnabled") {
+            defaults.set(true, forKey: "PinchEnabled")
         }
-        else {
-            print("No key for pinching!") // Default to enable pinch
-            defaults.set(true, forKey: "IsPinchEnabled")
-            configurePinch(isEnabled: true)
+        if !hasKey(key: "DoubleTapEnabled") {
+            defaults.set(true, forKey: "DoubleTapEnabled")
+        }
+        if !hasKey(key: "ProTheme") { // Use boolean instead of the custom enum
+            defaults.set(false, forKey: "ProTheme")
         }
         
-        // Check defaults if pro mode is enabled
-        if defaultsHasKey(key: "IsProEnabled") {
-            let b: Bool = defaults.object(forKey: "IsProEnabled") as! Bool
-
-            print("Pro enabled status: \(b)")
-            if b { // Pro is enabled
+        // Configure pro mode IAP
+        if !hasKey(key: "IsProEnabled") { // Pro has not been purchased by default
+            defaults.set(false, forKey: "IsProEnabled")
+            proToggleCell.isUserInteractionEnabled = false
+            proSwitch.thumbTintColor = UIColor.systemGray
+        }
+        else { // Enable/disable pro switch accordingly
+            let isPro: Bool = getValue(key: "IsProEnabled") as! Bool
+            if isPro { // Pro is enabled
                 proToggleCell.isUserInteractionEnabled = true
                 proSwitch.thumbTintColor = UIColor.white
             }
             else { // Disable pro theme if not paid
                 proToggleCell.isUserInteractionEnabled = false
                 proSwitch.thumbTintColor = UIColor.systemGray
-                configureTheme(theme: AppTheme.LIGHT) // Reset theme in case
             }
         }
-        else{
-            // Not purchased as default
-            print("No key for pro version!")
-            defaults.set(false, forKey: "IsProEnabled")
-        }
-        
-        // Look for key that determines theme and configure
-        if defaultsHasKey(key: "ProTheme") {
-            let intTheme: Int = defaults.object(forKey: "ProTheme") as! Int
-            print("Pro theme status: \(String(describing: AppTheme.init(rawValue: intTheme)))")
-            configureTheme(theme: AppTheme(rawValue: intTheme)!)
-        }
-        else {
-            // Set light theme by default
-            print("No key for current pro theme!")
-            print(AppTheme.LIGHT.rawValue)
-            defaults.set(AppTheme.LIGHT.rawValue, forKey: "ProTheme")
+    }
+    
+    // Iterate through the settings switches and enable/disable them accordingly
+    func configureSettings() {
+        for s in settingsSwitches { // Iterate through the buttons
+            // Get defaults key label from custom class
+            let switchKey: String = s.settingKey
+            
+            if hasKey(key: switchKey) && switchKey == "ProTheme" {
+                let switchState = getValue(key: switchKey)
+                s.isOn = switchState as! Bool
+                configureTheme(isDark: s.isOn)
+            }
+            else if hasKey(key: switchKey) {
+                let switchState = getValue(key: switchKey)
+                s.isOn = switchState as! Bool
+            }
+            else {
+                print("No key for current switch: \(s.description)")
+            }
         }
     }
     
     // Reusable helper function to set the colors of the theme
-    func configureTheme(theme: AppTheme) {
-        let defaults = UserDefaults.standard
-        if theme == AppTheme.DARK {
-            proSwitch.isOn = true // On if the theme was selected
+    func configureTheme(isDark: Bool) {
+        if isDark { // true == dark theme
+            proSwitch.isOn = true
             overrideUserInterfaceStyle = .dark
             pinchSwitch.onTintColor = UIColor.systemRed
+            doubleTapSwitch.onTintColor = UIColor.systemRed
             proSwitch.onTintColor = UIColor.systemRed
             versionLabel.textColor = UIColor.systemRed
             purchaseProCell.tintColor  = UIColor.systemRed
-            defaults.set(AppTheme.DARK.rawValue, forKey: "ProTheme")
+            setKey(key: "ProTheme", value: true)
         }
-        else if theme == AppTheme.LIGHT {
+        else {
             proSwitch.isOn = false
             overrideUserInterfaceStyle = .light
             pinchSwitch.onTintColor = UIColor.systemGreen
+            doubleTapSwitch.onTintColor = UIColor.systemGreen
             proSwitch.onTintColor = UIColor.systemGreen
             versionLabel.textColor = UIColor.systemBlue
             purchaseProCell.tintColor  = UIColor.systemBlue
-            defaults.set(AppTheme.LIGHT.rawValue, forKey: "ProTheme")
-        }
-        else {
-            print("Error configuring theme - this should never happen!")
-        }
-    }
-    
-    // Adjust the pinch switch as needed
-    func configurePinch(isEnabled: Bool) {
-        let defaults = UserDefaults.standard
-        if isEnabled {
-            pinchSwitch.isOn = true
-            defaults.set(true, forKey: "IsPinchEnabled")
-        }
-        else {
-            pinchSwitch.isOn = false
-            defaults.set(false, forKey: "IsPinchEnabled")
+            setKey(key: "ProTheme", value: false)
         }
     }
     
@@ -232,7 +258,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     
     // Open link in safari to github page
     func infoPressed() {
-        let infoURL: URL = URL(string: "https://github.com/sydneylin12/PR-Cam")!
+        let infoURL: URL = URL(string: "https://github.com/sydneylin12/PR-Cam/blob/master/README.md")!
         UIApplication.shared.open(infoURL)
     }
     
@@ -260,64 +286,14 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         }
     }
     
+    // Restore purchases button to meet apple requirements
+    func restorePressed() {
+        SKPaymentQueue.default().restoreCompletedTransactions()
+    }
+    
     // Dismiss the mail popup
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-        if segue.destination is ViewController {
-            let vc = segue.destination as? ViewController
-            vc?.isAudioEnabled = true
-        }
-    } */
 
 }
