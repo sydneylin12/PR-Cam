@@ -19,6 +19,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     @IBOutlet weak var pinchSwitch: SettingsSwitch!
     @IBOutlet weak var doubleTapSwitch: SettingsSwitch!
     @IBOutlet weak var proSwitch: SettingsSwitch!
+    @IBOutlet weak var trimSwitch: SettingsSwitch!
     
     // PR Cam Pro table cell
     @IBOutlet weak var purchaseProCell: UITableViewCell!
@@ -27,11 +28,13 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     @IBOutlet weak var pinchCell: UITableViewCell!
     @IBOutlet weak var doubleTapCell: UITableViewCell!
     @IBOutlet weak var proToggleCell: UITableViewCell!
+    @IBOutlet weak var trimCell: UITableViewCell!
     
     // IAP product ID
     let productID: String = "com.sydneylin.prcam.pro"
     
-    let settingsKeys = ["PinchEnabled", "DoubleTapEnabled", "ProEnabled"]
+    //let settingsKeys = ["PinchEnabled", "DoubleTapEnabled", "ProEnabled", "TrimEnabled"]
+    
     // List of settings UI elements (array of switches to be toggled)
     var settingsSwitches: Array<SettingsSwitch> = []
 
@@ -48,15 +51,18 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         pinchCell.selectionStyle = .none
         doubleTapCell.selectionStyle = .none
         proToggleCell.selectionStyle = .none
+        trimCell.selectionStyle = .none
         
         pinchSwitch.settingKey = "PinchEnabled"
         doubleTapSwitch.settingKey = "DoubleTapEnabled"
         proSwitch.settingKey = "ProTheme"
+        trimSwitch.settingKey = "TrimEnabled"
         
         // Append all switches to the list
         settingsSwitches.append(pinchSwitch)
         settingsSwitches.append(doubleTapSwitch)
         settingsSwitches.append(proSwitch)
+        settingsSwitches.append(trimSwitch)
         
         // IAP observer
         SKPaymentQueue.default().add(self)
@@ -70,30 +76,21 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             // If item has been purchased
-            if transaction.transactionState == .purchased {
-                print("Transaction succeeded!")
+            if transaction.transactionState == .purchased || transaction.transactionState == .restored{
+                print("Transaction succeeded with state: \(transaction.transactionState)")
                 // Update the defaults to enable pro mode
                 SKPaymentQueue.default().finishTransaction(transaction)
 
                 // Enable pro features
-                let defaults = UserDefaults.standard
-                defaults.set(true, forKey: "IsProEnabled")
-                proToggleCell.isUserInteractionEnabled = true
-                proSwitch.thumbTintColor = UIColor.white
+                setKey(key: "IsProEnabled", value: true)
+                toggleProFeature(isEnabled: true)
             }
             else if transaction.transactionState == .failed {
                 print("Transaction failed!")
                 SKPaymentQueue.default().finishTransaction(transaction)
             }
-            else if transaction.transactionState == .restored {
-                SKPaymentQueue.default().finishTransaction(transaction)
-                print("Transaction restored!")
-                
-                // Enable pro features
-                let defaults = UserDefaults.standard
-                defaults.set(true, forKey: "IsProEnabled")
-                proToggleCell.isUserInteractionEnabled = true
-                proSwitch.thumbTintColor = UIColor.white
+            else{
+                print("Error with transaction: \(transaction.transactionState)")
             }
         }
     }
@@ -114,8 +111,8 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         else if section == 2 { // About
             return 1
         }
-        else if section == 3 {
-            return 3
+        else if section == 3 { // Pro settings
+            return 4
         }
         else {
             return 0
@@ -168,32 +165,44 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         if !hasKey(key: "ProTheme") { // Use boolean instead of the custom enum
             defaults.set(false, forKey: "ProTheme")
         }
+        if !hasKey(key: "TrimEnabled") { // Use boolean instead of the custom enum
+            defaults.set(false, forKey: "TrimEnabled")
+        }
         
         // Configure pro mode IAP
         if !hasKey(key: "IsProEnabled") { // Pro has not been purchased by default
             defaults.set(false, forKey: "IsProEnabled")
-            proToggleCell.isUserInteractionEnabled = false
-            proSwitch.thumbTintColor = UIColor.systemGray
+            toggleProFeature(isEnabled: false)
         }
         else { // Enable/disable pro switch accordingly
             let isPro: Bool = getValue(key: "IsProEnabled") as! Bool
-            if isPro { // Pro is enabled
-                proToggleCell.isUserInteractionEnabled = true
-                proSwitch.thumbTintColor = UIColor.white
-            }
-            else { // Disable pro theme if not paid
-                proToggleCell.isUserInteractionEnabled = false
-                proSwitch.thumbTintColor = UIColor.systemGray
-            }
+            toggleProFeature(isEnabled: isPro)
+        }
+    }
+    
+    // Disable and enable pro features (does not modify switch values)
+    func toggleProFeature(isEnabled: Bool) {
+        if(!isEnabled) {
+            proToggleCell.isUserInteractionEnabled = false
+            trimCell.isUserInteractionEnabled = false
+            proSwitch.thumbTintColor = UIColor.systemGray
+            trimSwitch.thumbTintColor = UIColor.systemGray
+        }
+        else {
+            proToggleCell.isUserInteractionEnabled = true
+            trimCell.isUserInteractionEnabled = true
+            proSwitch.thumbTintColor = UIColor.white
+            trimSwitch.thumbTintColor = UIColor.white
         }
     }
     
     // Iterate through the settings switches and enable/disable them accordingly
     func configureSettings() {
-        for s in settingsSwitches { // Iterate through the buttons
+        for s in settingsSwitches {
             // Get defaults key label from custom class
             let switchKey: String = s.settingKey
             
+            // Special condition to configure theme
             if hasKey(key: switchKey) && switchKey == "ProTheme" {
                 let switchState = getValue(key: switchKey)
                 s.isOn = switchState as! Bool
@@ -217,6 +226,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             pinchSwitch.onTintColor = UIColor.systemRed
             doubleTapSwitch.onTintColor = UIColor.systemRed
             proSwitch.onTintColor = UIColor.systemRed
+            trimSwitch.onTintColor = UIColor.systemRed
             versionLabel.textColor = UIColor.systemRed
             purchaseProCell.tintColor  = UIColor.systemRed
             setKey(key: "ProTheme", value: true)
@@ -227,6 +237,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             pinchSwitch.onTintColor = UIColor.systemGreen
             doubleTapSwitch.onTintColor = UIColor.systemGreen
             proSwitch.onTintColor = UIColor.systemGreen
+            trimSwitch.onTintColor = UIColor.systemGreen
             versionLabel.textColor = UIColor.systemBlue
             purchaseProCell.tintColor  = UIColor.systemBlue
             setKey(key: "ProTheme", value: false)

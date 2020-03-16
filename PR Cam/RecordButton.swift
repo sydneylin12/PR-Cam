@@ -27,15 +27,12 @@ protocol RecordButtonDelegate: class {
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.clear
+        setupRecordButtonView()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.backgroundColor = UIColor.clear
-    }
-
-    override open func draw(_ rect: CGRect) {
-
         setupRecordButtonView()
     }
 
@@ -92,8 +89,8 @@ protocol RecordButtonDelegate: class {
 
         let animationGroup = CAAnimationGroup()
         animationGroup.animations = [transformToStopButton, toSmallCircle]
-        animationGroup.duration = 0.25
-        animationGroup.fillMode = kCAFillModeBoth
+        animationGroup.duration = 0.2
+        animationGroup.fillMode = CAMediaTimingFillMode.both
         animationGroup.isRemovedOnCompletion = false
 
         return animationGroup
@@ -101,9 +98,7 @@ protocol RecordButtonDelegate: class {
     }
 
     @objc func tappedView(_ sender: UITapGestureRecognizer) {
-
         self.roundView?.layer.add(self.recordButtonAnimation(), forKey: "")
-
         isRecording = !isRecording
         delegate?.tapButton(isRecording: isRecording)
 
@@ -112,6 +107,12 @@ protocol RecordButtonDelegate: class {
     override open func prepareForInterfaceBuilder() {
         self.backgroundColor = UIColor.clear
         setupRecordButtonView()
+    }
+    
+    // Added public function to force end recording
+    public func endRecording() {
+        isRecording = false
+        delegate?.tapButton(isRecording: isRecording)
     }
 
 }

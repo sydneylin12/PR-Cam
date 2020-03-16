@@ -23,11 +23,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow access to camera to film.</string>
+	<string>Allow access to camera to capture videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow this app to record audio.</string>
+	<string>Allow this app to capture videos with audio included.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Allow this app to save videos to the camera roll.</string>
+	<string>Allow this app to save videos to the library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow this app to overwrite videos from the library.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -60,13 +62,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

@@ -103,11 +103,112 @@
                         <outlet property="swapButton" destination="R84-RU-Dvx" id="VB0-gf-xaF"/>
                         <outlet property="timerLabel" destination="eLi-zP-Jun" id="0Dj-qG-vMz"/>
                         <segue destination="wOk-uG-oBO" kind="presentation" identifier="toSettingsSegue" id="bWq-Hs-P4v"/>
+                        <segue destination="aj5-Za-NU2" kind="presentation" identifier="toTrimSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="Gh4-F1-04T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="115.84821428571428"/>
+        </scene>
+        <!--Trim View Controller-->
+        <scene sceneID="LiY-IC-iCs">
+            <objects>
+                <viewController id="aj5-Za-NU2" customClass="TrimViewController" customModule="PR_Cam" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="q29-RS-cS8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yzo-jE-1BN" userLabel="Video Layer">
+                                <rect key="frame" x="0.0" y="97" width="414" height="582"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fu-wj-F74" userLabel="Trim View">
+                                <rect key="frame" x="20.5" y="704" width="373" height="50"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DNY-1K-3qA" userLabel="Image Container View">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="50"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Bor-aR-Hf8"/>
+                                    <constraint firstItem="DNY-1K-3qA" firstAttribute="top" secondItem="1fu-wj-F74" secondAttribute="top" id="KTe-hh-Hl5"/>
+                                    <constraint firstItem="DNY-1K-3qA" firstAttribute="leading" secondItem="1fu-wj-F74" secondAttribute="leading" id="bvg-fs-Vwb"/>
+                                    <constraint firstItem="DNY-1K-3qA" firstAttribute="width" secondItem="1fu-wj-F74" secondAttribute="width" id="dKc-CN-PJr"/>
+                                    <constraint firstItem="DNY-1K-3qA" firstAttribute="height" secondItem="1fu-wj-F74" secondAttribute="height" id="xgv-IO-sLk"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MnE-YG-SNA" userLabel="Button Container">
+                                <rect key="frame" x="20.5" y="779" width="373" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0uO-mJ-Zxu" userLabel="Trim Button">
+                                        <rect key="frame" x="303" y="7" width="50" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Vdq-O4-vkr"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Trim">
+                                            <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cropVideo:" destination="aj5-Za-NU2" eventType="touchUpInside" id="3KK-nS-xRk"/>
+                                            <segue destination="u9k-xt-dQT" kind="unwind" unwindAction="unwindToMainWithSegue:" id="ZjP-Nc-YsD"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7xS-tH-oiz" userLabel="Close Button">
+                                        <rect key="frame" x="20" y="7" width="70" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="C8l-Vy-f84"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="u9k-xt-dQT" kind="unwind" unwindAction="unwindToMainWithSegue:" id="1b3-i0-XCe"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.17254901960784313" green="0.17254901960784313" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="7xS-tH-oiz" firstAttribute="leading" secondItem="MnE-YG-SNA" secondAttribute="leading" constant="20" id="TCM-wz-mBw"/>
+                                    <constraint firstItem="7xS-tH-oiz" firstAttribute="centerY" secondItem="MnE-YG-SNA" secondAttribute="centerY" id="VoD-Yb-8gb"/>
+                                    <constraint firstItem="0uO-mJ-Zxu" firstAttribute="centerY" secondItem="MnE-YG-SNA" secondAttribute="centerY" id="Wjv-9S-iEb"/>
+                                    <constraint firstAttribute="trailing" secondItem="0uO-mJ-Zxu" secondAttribute="trailing" constant="20" id="bCW-Qk-5ic"/>
+                                    <constraint firstItem="7xS-tH-oiz" firstAttribute="leading" secondItem="MnE-YG-SNA" secondAttribute="leading" constant="20" id="q1t-ar-fN6"/>
+                                    <constraint firstItem="0uO-mJ-Zxu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7xS-tH-oiz" secondAttribute="trailing" constant="177.5" id="w5f-5Q-Mue"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.11764705882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="MnE-YG-SNA" firstAttribute="top" secondItem="1fu-wj-F74" secondAttribute="bottom" constant="25" id="1dL-cN-AhR"/>
+                            <constraint firstItem="1fu-wj-F74" firstAttribute="centerX" secondItem="pOf-rU-SLh" secondAttribute="centerX" id="1v9-4i-JzL"/>
+                            <constraint firstItem="MnE-YG-SNA" firstAttribute="width" secondItem="q29-RS-cS8" secondAttribute="width" multiplier="0.9" id="6kY-kB-DeI"/>
+                            <constraint firstItem="Yzo-jE-1BN" firstAttribute="width" secondItem="q29-RS-cS8" secondAttribute="width" id="Ef9-j1-TPV"/>
+                            <constraint firstItem="Yzo-jE-1BN" firstAttribute="centerX" secondItem="q29-RS-cS8" secondAttribute="centerX" id="GRP-XY-Egp"/>
+                            <constraint firstItem="1fu-wj-F74" firstAttribute="top" secondItem="Yzo-jE-1BN" secondAttribute="bottom" constant="25" id="Jdd-xA-w6H"/>
+                            <constraint firstItem="MnE-YG-SNA" firstAttribute="height" secondItem="1fu-wj-F74" secondAttribute="height" id="VyJ-ue-93N"/>
+                            <constraint firstItem="1fu-wj-F74" firstAttribute="width" secondItem="q29-RS-cS8" secondAttribute="width" multiplier="0.9" id="epu-ib-evT"/>
+                            <constraint firstItem="Yzo-jE-1BN" firstAttribute="centerY" secondItem="q29-RS-cS8" secondAttribute="centerY" constant="-60" id="iGl-7I-9aG"/>
+                            <constraint firstItem="MnE-YG-SNA" firstAttribute="centerX" secondItem="pOf-rU-SLh" secondAttribute="centerX" id="kpV-Cd-TOa"/>
+                            <constraint firstItem="Yzo-jE-1BN" firstAttribute="height" secondItem="q29-RS-cS8" secondAttribute="height" multiplier="0.65" id="tcW-QE-Awk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="pOf-rU-SLh"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="lHW-IB-WIW"/>
+                    <connections>
+                        <outlet property="buttonView" destination="MnE-YG-SNA" id="BI4-nk-gLN"/>
+                        <outlet property="frameContainerView" destination="1fu-wj-F74" id="cc9-8X-8lF"/>
+                        <outlet property="imageFrameView" destination="DNY-1K-3qA" id="iBX-1n-XmG"/>
+                        <outlet property="trimButton" destination="0uO-mJ-Zxu" id="ImF-XA-sNp"/>
+                        <outlet property="videoLayer" destination="Yzo-jE-1BN" id="eUH-lz-TGh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iwr-gO-NgO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="u9k-xt-dQT" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="827"/>
         </scene>
         <!--Settings Table View Controller-->
         <scene sceneID="cn8-fp-tBa">
@@ -361,6 +462,36 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="dET-10-7u8">
+                                        <rect key="frame" x="20" y="615" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dET-10-7u8" id="GBl-bn-NH6">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trim after Recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GsC-Gi-zUw">
+                                                    <rect key="frame" x="20" y="11.5" width="156" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-hw-lUb" customClass="SettingsSwitch" customModule="PR_Cam" customModuleProvider="target">
+                                                    <rect key="frame" x="305" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onSwitchChanged:" destination="wOk-uG-oBO" eventType="touchUpInside" id="tAD-Wi-QP8"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="JLe-hw-lUb" firstAttribute="trailing" secondItem="GBl-bn-NH6" secondAttribute="trailing" constant="-20" id="Anw-mW-9Ze"/>
+                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="JLe-hw-lUb" secondAttribute="leading" id="E1c-es-JwV"/>
+                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="centerY" secondItem="GBl-bn-NH6" secondAttribute="centerY" id="Jsi-pm-NJ6"/>
+                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="leading" secondItem="GBl-bn-NH6" secondAttribute="leadingMargin" id="gMb-bf-jdw"/>
+                                                <constraint firstItem="JLe-hw-lUb" firstAttribute="centerY" secondItem="GBl-bn-NH6" secondAttribute="centerY" id="irf-G2-BgQ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -377,6 +508,8 @@
                         <outlet property="proSwitch" destination="ofs-Ot-DNo" id="aTa-xn-jQ1"/>
                         <outlet property="proToggleCell" destination="4RP-PD-Juy" id="1J6-8b-Ro6"/>
                         <outlet property="purchaseProCell" destination="RYH-1H-tDb" id="9Wc-ug-umb"/>
+                        <outlet property="trimCell" destination="dET-10-7u8" id="7zw-F5-mT6"/>
+                        <outlet property="trimSwitch" destination="JLe-hw-lUb" id="yPg-n2-Ssh"/>
                         <outlet property="versionLabel" destination="SiD-jE-Lcg" id="aIA-bQ-emB"/>
                     </connections>
                 </tableViewController>

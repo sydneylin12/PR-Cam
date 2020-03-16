@@ -12,7 +12,7 @@ import ReplayKit
 import Photos
 import StoreKit
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  UINavigationControllerDelegate, RecordButtonDelegate {
+class ViewController: UIViewController {
     
     // The view used to display the video
     @IBOutlet weak var mainView: UIView!
@@ -34,7 +34,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         
     // Indicate the state of the camera and currently recording
     var cameraPosition: CameraPosition = CameraPosition.BACK
-    var recordingState: Bool = false // Can be kept as a boolean
+    var recordingState: Bool = false
+    var currentURL: URL?
     
     // Variables for the camera timer
     var time = 0
@@ -45,9 +46,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     let maxZoom: CGFloat = 3.0
     var lastZoomFactor: CGFloat = 1.0
     
-    // Called when the application loads (once)
+    // Called when the application first loads
     override func viewDidLoad() {
-        //print("View Controller - View Did Load")
         super.viewDidLoad()
 
         // Change label font for monospace
@@ -86,35 +86,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .darkContent
     }
-
-    // When the animated recording button is pressed
-    func tapButton(isRecording: Bool) {
-        if(isRecording) {
-            // Update boolean flag
-            self.recordingState = true
-            
-            //Start timer
-            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.action), userInfo: nil, repeats: true)
-            
-            // Begin capture session
-            captureSession.startRunning()
-            
-            // Set movie output save path
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let fileUrl = paths[0].appendingPathComponent("output.mov")
-            try? FileManager.default.removeItem(at: fileUrl)
-            movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
-        }
-        else{ // If the camera is recording
-            self.recordingState = false
-            
-            // Turn off timer and reset
-            timer.invalidate()
-            time = 0
-            timerLabel.text = String(convertTime(time: time))
-            
-            // Stop recording and create notification
-            movieOutput.stopRecording()
+    
+    // Prepare to send the URL to the trim segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "toTrimSegue") {
+            let trimController = segue.destination as! TrimViewController
+            trimController.url = self.currentURL!
         }
     }
     
@@ -181,25 +158,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
     
-    // Called when the file output is saved (similar to a callback)
-    // "Informs the delegate when all pending data has been written to an output file"
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        if error == nil {
-            // Save the video with a completion selector
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(video(videoPath:didFinishSavingWithError:contextInfo:)), nil)
-        }
+    // Unwind from trim segue to main camera view
+    @IBAction func unwindToMain(segue: UIStoryboardSegue) {
+        print("Unwinded!")
     }
-    
-    // Handle when the file finishes saving
-    @objc func video(videoPath: String, didFinishSavingWithError error: NSError?, contextInfo info: UnsafeMutableRawPointer) {
-        if(error == nil) {
-            createAlert(title: "Video Saved", message: "The video has been saved to the camera roll.")
-        }
-        else {
-            createAlert(title: "Error", message: "Please go to settings and grant PR Cam access to save to the photo library.")
-        }
-    }
-    
     
     // Code to configure the camera session with an enum value of FRONT or BACK
     func configureSession() {
@@ -301,32 +263,35 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
             // On dismiss handler here
             (action) in alert.dismiss(animated: true, completion: {
-                if hasKey(key: "IsProEnabled") {
-                    // Do not present in app review for pro users
-                    let proUser: Bool = getValue(key: "IsProEnabled") as! Bool
-                    if !proUser { // If pro is not enabled
-                        SKStoreReviewController.requestReview()
-                    }
-                }
+                requestReview()
             })
         }))
         // Present the alert
         self.present(alert, animated: true, completion: nil)
     }
     
-    // TODO: Toggle a blur effect for swapping
+    // Create an alert with options to save or trim (PRO)
+    func createFinishedRecordingAlert() {
+        let alert = UIAlertController(title: "PR Cam recording finished.", message: "What would you like to do?", preferredStyle: .alert)
+        
+        // Request a review when the alert is dismissed
+        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Trim", style: .default, handler: {
+            (action) in self.performSegue(withIdentifier: "toTrimSegue", sender: self)
+        }))
+        
+        // Present the alert
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    // Trigger a blur effect for swapping the camera
     func blur() {
         // Create a blur effect and blur view
         let blurEffect = UIBlurEffect(style: .regular)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.frame = self.view.bounds // Set bounds to whole screen
         UIView.transition(with: self.mainView, duration: 0.75, options: .transitionCrossDissolve, animations: nil, completion: nil)
-        
-        /* Remove blur on animation completion
-        UIView.transition(with: self.mainView, duration: 0.3, options: .transitionFlipFromLeft, animations: {
-            //self.view.addSubview(blurView);
-        }, completion: { (dummy) in blurView.removeFromSuperview() } )
-        */
     }
     
     // Handle the pinch gesture to zoom the camera (closure)
@@ -367,7 +332,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
             lastZoomFactor = minMaxZoom(newFactor)
             update(scale: lastZoomFactor)
         }
-        
     }
     
     // Run the timer
@@ -425,5 +389,64 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate,  U
             createAlert(title: "Recording Ended", message: "The recording has been saved before the application was exited.")
         }
     }
+}
+
+// Delegate function for when the recording is finished
+extension ViewController: AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        if error == nil {
+            //print("Video finished recording to output file URL: \(outputFileURL)")
+            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(video(videoPath:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
     
+    // Handle when the file finishes saving
+    @objc func video(videoPath: String, didFinishSavingWithError error: NSError?, contextInfo info: UnsafeMutableRawPointer) {
+        if(error == nil) {
+            var trimEnabled: Bool = false
+            if(hasKey(key: "TrimEnabled")){
+                trimEnabled = getValue(key: "TrimEnabled") as! Bool
+            }
+            if(trimEnabled) { // Allow user to trim
+                createFinishedRecordingAlert()
+            }
+            else { // Create default alert
+                createAlert(title: "PR Cam recording finished.", message: "Video has been saved to the camera roll.")
+            }
+        }
+        else {
+            createAlert(title: "Error saving video", message: "There was an error saving the video. Please check the app settings.")
+        }
+    }
+}
+
+// Delegate for tapping the animated record button
+extension ViewController: RecordButtonDelegate {
+    func tapButton(isRecording: Bool) {
+        if(isRecording) {
+            // Update boolean flag
+            self.recordingState = true
+            
+            //Start timer
+            timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.action), userInfo: nil, repeats: true)
+            
+            // Begin capture session
+            captureSession.startRunning()
+            
+            // Generate a unique URL to save the video to
+            let fileURL = generateURL()
+            currentURL = fileURL
+            movieOutput.startRecording(to: fileURL, recordingDelegate: self)
+        }
+        else{ // If the camera is recording
+            self.recordingState = false
+            
+            // Turn off timer and reset label text
+            timer.invalidate()
+            time = 0
+            timerLabel.text = String(convertTime(time: time))
+            
+            movieOutput.stopRecording()
+        }
+    }
 }

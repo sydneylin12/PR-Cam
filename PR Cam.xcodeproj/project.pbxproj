@@ -25,9 +25,11 @@
 		000D5C0423F20DDA00EE5716 /* CameraRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFE23F20DDA00EE5716 /* CameraRoll.png */; };
 		001B16A823E0EFE200A26654 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001B16A723E0EFE200A26654 /* Helper.swift */; };
 		006BC07723F34280000785D4 /* PR Cam Logo Dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 006BC07623F34280000785D4 /* PR Cam Logo Dark.png */; };
+		007E61F5241DBC4500F775CC /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F4241DBC4500F775CC /* RecordButton.swift */; };
+		007E61F7241DBFDE00F775CC /* TrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F6241DBFDE00F775CC /* TrimViewController.swift */; };
+		007E61F9241EA55A00F775CC /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F8241EA55A00F775CC /* RangeSlider.swift */; };
 		0085E73824105A0E00D08EF9 /* SettingsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0085E73724105A0E00D08EF9 /* SettingsSwitch.swift */; };
 		008AA9C0241090CB00427B3F /* AnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008AA9BF241090CB00427B3F /* AnimationExtension.swift */; };
-		00D7B48323E92588003580BB /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D7B48223E92588003580BB /* RecordButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,9 +53,11 @@
 		000D5BFE23F20DDA00EE5716 /* CameraRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CameraRoll.png; path = ../../../Photos/CameraRoll.png; sourceTree = "<group>"; };
 		001B16A723E0EFE200A26654 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		006BC07623F34280000785D4 /* PR Cam Logo Dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PR Cam Logo Dark.png"; path = "../../../Photos/PR Cam Logo Dark.png"; sourceTree = "<group>"; };
+		007E61F4241DBC4500F775CC /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		007E61F6241DBFDE00F775CC /* TrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimViewController.swift; sourceTree = "<group>"; };
+		007E61F8241EA55A00F775CC /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		0085E73724105A0E00D08EF9 /* SettingsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSwitch.swift; sourceTree = "<group>"; };
 		008AA9BF241090CB00427B3F /* AnimationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationExtension.swift; sourceTree = "<group>"; };
-		00D7B48223E92588003580BB /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecordButton.swift; path = ../../RecordButtonTest/Source/RecordButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +101,6 @@
 			isa = PBXGroup;
 			children = (
 				0021744823B977BA0076A07F /* Images */,
-				00D7B48223E92588003580BB /* RecordButton.swift */,
 				000D10FD23B5A9C700BED536 /* SceneDelegate.swift */,
 				000D10FF23B5A9C700BED536 /* ViewController.swift */,
 				001B16A723E0EFE200A26654 /* Helper.swift */,
@@ -108,6 +111,9 @@
 				0002867F23FA4598000C9BF8 /* SettingsTableViewController.swift */,
 				0085E73724105A0E00D08EF9 /* SettingsSwitch.swift */,
 				008AA9BF241090CB00427B3F /* AnimationExtension.swift */,
+				007E61F4241DBC4500F775CC /* RecordButton.swift */,
+				007E61F6241DBFDE00F775CC /* TrimViewController.swift */,
+				007E61F8241EA55A00F775CC /* RangeSlider.swift */,
 			);
 			path = "PR Cam";
 			sourceTree = "<group>";
@@ -209,13 +215,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				007E61F5241DBC4500F775CC /* RecordButton.swift in Sources */,
 				008AA9C0241090CB00427B3F /* AnimationExtension.swift in Sources */,
 				000D110023B5A9C700BED536 /* ViewController.swift in Sources */,
 				000D10FC23B5A9C700BED536 /* AppDelegate.swift in Sources */,
+				007E61F7241DBFDE00F775CC /* TrimViewController.swift in Sources */,
 				0002868023FA4598000C9BF8 /* SettingsTableViewController.swift in Sources */,
+				007E61F9241EA55A00F775CC /* RangeSlider.swift in Sources */,
 				000D10FE23B5A9C700BED536 /* SceneDelegate.swift in Sources */,
 				001B16A823E0EFE200A26654 /* Helper.swift in Sources */,
-				00D7B48323E92588003580BB /* RecordButton.swift in Sources */,
 				0085E73824105A0E00D08EF9 /* SettingsSwitch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,7 +369,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9NZH626LPT;
 				INFOPLIST_FILE = "PR Cam/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -369,7 +377,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -382,7 +390,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9NZH626LPT;
 				INFOPLIST_FILE = "PR Cam/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -390,7 +398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
