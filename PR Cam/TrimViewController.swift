@@ -26,13 +26,10 @@ class TrimViewController: UIViewController {
     
     var isPlaying: Bool = true
     var isDirty: Bool = false
-    //var playbackTimeCheckerTimer: Timer! = nil
-    //let playerObserver: Any? = nil
 
     var startTime: CGFloat = 0.0
     var stopTime: CGFloat  = 0.0
-    var thumbTime: CMTime!
-    var thumbtimeSeconds: Double!
+    var totalTime: Double! = 0.0
 
     var videoPlaybackPosition: CGFloat = 0.0
     var rangeSlider: RangeSlider! = nil
@@ -41,6 +38,8 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var imageFrameView: UIView!
     @IBOutlet weak var buttonView: UIView!
     @IBOutlet weak var trimButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var progressBar: UIProgressView!
 
     //@IBOutlet weak var startView: UIView!
     //@IBOutlet weak var startTimeText: UITextField!
@@ -57,11 +56,7 @@ class TrimViewController: UIViewController {
     func loadViews() {
         print("Trim view recieved URL: \(self.url!)")
         
-        // Create border for video layer
-        //videoLayer.layer.borderWidth = 5.0
-        //videoLayer.layer.cornerRadius = 5.0
-        //videoLayer.layer.borderColor = UIColor.gray.cgColor
-        
+        // Initialize the UI elements
         frameContainerView.layer.borderWidth = 2.0
         frameContainerView.layer.cornerRadius = 10.0
         frameContainerView.layer.borderColor = UIColor.white.cgColor
@@ -72,6 +67,11 @@ class TrimViewController: UIViewController {
         imageFrameView.layer.masksToBounds = true
         
         buttonView.layer.cornerRadius = 10.0
+        
+        progressBar.setProgress(0.0, animated: false)
+        progressBar.isHidden = true
+        progressBar.layer.masksToBounds = true
+        progressBar.layer.cornerRadius = 5.0
         
         /*
         layoutContainer.layer.borderWidth = 1.0
@@ -94,11 +94,6 @@ class TrimViewController: UIViewController {
         // Create the video player and asset from URL
         player = AVPlayer()
         asset = AVURLAsset.init(url: self.url)
-
-        thumbTime = asset.duration
-        thumbtimeSeconds = CMTimeGetSeconds(thumbTime)
-
-        // Get and create the video from the URL passed in
         let item: AVPlayerItem = AVPlayerItem(asset: asset)
         player = AVPlayer(playerItem: item)
         playerLayer = AVPlayerLayer(player: player)
@@ -106,6 +101,10 @@ class TrimViewController: UIViewController {
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         player.actionAtItemEnd = AVPlayer.ActionAtItemEnd.none
         
+        // Get the total video time
+        totalTime = CMTimeGetSeconds(asset.duration)
+        
+        // Initialize the trim slider AFTER getting total time
         self.createRangeSlider()
         self.createImageFrames()
 
@@ -116,6 +115,7 @@ class TrimViewController: UIViewController {
         
         // Add notification observer for when the video finishes playing
         NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying), name: .AVPlayerItemDidPlayToEndTime, object: self.player)
+        NotificationCenter.default.addObserver(self, selector: #selector(exportCompleted), name: Notification.Name("ExportCompleted"), object: nil)
 
         videoLayer.layer.addSublayer(playerLayer)
         player.play()
@@ -133,6 +133,11 @@ class TrimViewController: UIViewController {
         self.cropVideo(sourceURL: url as NSURL, startTime: start, endTime: end)
     }
     
+    // When close button is clicked
+    @IBAction func onClose() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     // Initialize the range slider element
     func createRangeSlider() {
         rangeSlider = RangeSlider(frame: frameContainerView.bounds)
@@ -144,9 +149,9 @@ class TrimViewController: UIViewController {
         
         // Set the max, upper value, and min to 0 and (video.length) respectively
         rangeSlider.minimumValue = 0.0
-        rangeSlider.maximumValue = thumbtimeSeconds
+        rangeSlider.maximumValue = totalTime
         rangeSlider.lowerValue = 0.0
-        rangeSlider.upperValue = thumbtimeSeconds
+        rangeSlider.upperValue = totalTime
         
         //Range slider action
         rangeSlider.addTarget(self, action: #selector(TrimViewController.rangeSliderValueChanged(_:)), for: .valueChanged)
@@ -154,7 +159,6 @@ class TrimViewController: UIViewController {
     
     // Called when the range slider value is changed
     @objc func rangeSliderValueChanged(_ rangeSlider: RangeSlider) {
-        //print("LOWER: \(rangeSlider.lowerValue) UPPER: \(rangeSlider.upperValue)")
         self.player.pause()
         isPlaying = false
         
@@ -183,9 +187,15 @@ class TrimViewController: UIViewController {
     }
     
     // Called when the trim video preview finished
-    @objc func finishedPlaying(){
-        print("Video finished playing!")
+    @objc func finishedPlaying() {
+        //print("Video finished playing!")
         isPlaying = false
+    }
+    
+    // Called when the tread finishes exporting the video and dismiss the trim VC
+    @objc func exportCompleted(){
+        //print("Export session completed!")
+        self.dismiss(animated: true, completion: nil)
     }
     
     // Seek video when slide
@@ -194,16 +204,19 @@ class TrimViewController: UIViewController {
         let time: CMTime = CMTimeMakeWithSeconds(Float64(self.videoPlaybackPosition), preferredTimescale: self.player.currentTime().timescale)
         self.player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         
-        if(pos == CGFloat(thumbtimeSeconds)) {
+        if(pos == CGFloat(totalTime)) {
             self.player.pause()
         }
     }
     
     // Trim Video Function
     func cropVideo(sourceURL: NSURL, startTime: Float, endTime: Float) {
+        // Disable close button and unhide progress bar
+        progressBar.isHidden = false
+        closeButton.isEnabled = false
+        closeButton.setTitleColor(UIColor.gray, for: .normal)
+        
         let manager = FileManager.default
-        let length = Float(asset.duration.value) / Float(asset.duration.timescale)
-        print("Video length: \(length) seconds")
 
         do {
             try manager.removeItem(at: self.url)
@@ -220,23 +233,51 @@ class TrimViewController: UIViewController {
         let endTime = CMTime(seconds: Double(endTime), preferredTimescale: 1000)
         let timeRange = CMTimeRange(start: startTime, end: endTime)
 
+        var isComplete: Bool = false
+        
         exportSession.timeRange = timeRange
         exportSession.exportAsynchronously{
             switch exportSession.status {
                 case .completed:
                     print("Exported at \(self.url!)")
+                    isComplete = true
                     self.saveToCameraRoll(url: self.url)
+                    // MUST call this on the main thread
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Notification.Name("ExportCompleted"), object: nil)
+                    }
                 case .failed:
-                    print("Cropping video failed!")
+                    DispatchQueue.main.async {
+                        isComplete = true
+                        createNotification(sender: self, title: "Error trimming video.", message: "The trimming operation failed due to an error.")
+                        self.closeButton.isEnabled = true
+                        self.closeButton.setTitleColor(UIColor.white, for: .normal)
+                    }
+                // Might not need this because exportSession.cancel not called
                 case .cancelled:
-                    print("Cropping video cancelled!")
-                default: break
+                    DispatchQueue.main.async {
+                        isComplete = true
+                        createNotification(sender: self, title: "Error trimming video.", message: "The trimming was cancelled.")
+                        self.closeButton.isEnabled = true
+                        self.closeButton.setTitleColor(UIColor.white, for: .normal)
+                    }
+                default:
+                    break
             }
         }
         
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {
+            (timer) in
+            guard !isComplete else{
+                //print("Progress bar finished!")
+                timer.invalidate() // Stop the timer
+                return
+            }
+            self.progressBar.setProgress(exportSession.progress, animated: true)
+        })
     }
     
-    // Save Video to Photos Library
+    // Save video to photo library
     func saveToCameraRoll(url: URL) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
@@ -252,11 +293,10 @@ class TrimViewController: UIViewController {
         assetImgGenerate.requestedTimeToleranceBefore = CMTime.zero;
         
         assetImgGenerate.appliesPreferredTrackTransform = true
-        let thumbTime: CMTime = asset.duration
-        let thumbtimeSeconds = CMTimeGetSeconds(thumbTime)
-        let maxLength = "\(thumbtimeSeconds)" as NSString
+        let totalTime = CMTimeGetSeconds(asset.duration)
+        let maxLength = "\(totalTime)" as NSString
 
-        let thumbAvg: Double  = thumbtimeSeconds/6
+        let thumbAvg: Double  = totalTime/6
         var startTime: Double = 0.0
         var startXPosition: CGFloat = 0.0
         
@@ -271,8 +311,8 @@ class TrimViewController: UIViewController {
                 let image = UIImage(cgImage: img)
                 imageButton.setImage(image, for: .normal)
             }
-            catch {
-                print("Image generation failed with error (error)")
+            catch let error {
+                print("Image generation failed with error \(error)")
             }
           
             startXPosition = startXPosition + xPositionForEach

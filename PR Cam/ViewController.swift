@@ -158,11 +158,6 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
     
-    // Unwind from trim segue to main camera view
-    @IBAction func unwindToMain(segue: UIStoryboardSegue) {
-        print("Unwinded!")
-    }
-    
     // Code to configure the camera session with an enum value of FRONT or BACK
     func configureSession() {
         do {
@@ -253,21 +248,6 @@ class ViewController: UIViewController {
                 print("No flash light detected on device!")
             }
         }
-    }
-    
-    // Create an alert when the video is finished
-    func createAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        // Request a review when the alert is dismissed
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-            // On dismiss handler here
-            (action) in alert.dismiss(animated: true, completion: {
-                requestReview()
-            })
-        }))
-        // Present the alert
-        self.present(alert, animated: true, completion: nil)
     }
     
     // Create an alert with options to save or trim (PRO)
@@ -386,7 +366,7 @@ class ViewController: UIViewController {
             UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil )
             
             // Create notification of background app
-            createAlert(title: "Recording Ended", message: "The recording has been saved before the application was exited.")
+            createNotification(sender: self, title: "Recording Ended", message: "The recording has been saved before the application was exited.")
         }
     }
 }
@@ -411,11 +391,11 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
                 createFinishedRecordingAlert()
             }
             else { // Create default alert
-                createAlert(title: "PR Cam recording finished.", message: "Video has been saved to the camera roll.")
+                createNotification(sender: self, title: "PR Cam recording finished.", message: "Video has been saved to the camera roll.")
             }
         }
         else {
-            createAlert(title: "Error saving video", message: "There was an error saving the video. Please check the app settings.")
+            createNotification(sender: self, title: "Error saving video", message: "There was an error saving the video. Please check the app settings.")
         }
     }
 }

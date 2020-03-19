@@ -120,7 +120,21 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yzo-jE-1BN" userLabel="Video Layer">
                                 <rect key="frame" x="0.0" y="97" width="414" height="582"/>
+                                <subviews>
+                                    <progressView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="0nd-zm-8v4">
+                                        <rect key="frame" x="41.5" y="-30" width="331" height="10"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="10" id="fTh-72-O69"/>
+                                        </constraints>
+                                    </progressView>
+                                </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="0nd-zm-8v4" firstAttribute="width" secondItem="Yzo-jE-1BN" secondAttribute="width" multiplier="0.8" id="6FF-NN-j2A"/>
+                                    <constraint firstItem="0nd-zm-8v4" firstAttribute="centerX" secondItem="Yzo-jE-1BN" secondAttribute="centerX" id="GdW-CA-6bp"/>
+                                    <constraint firstItem="0nd-zm-8v4" firstAttribute="centerY" secondItem="Yzo-jE-1BN" secondAttribute="top" constant="-25" id="Qb0-1W-mGI"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fu-wj-F74" userLabel="Trim View">
                                 <rect key="frame" x="20.5" y="704" width="373" height="50"/>
@@ -152,7 +166,6 @@
                                         </state>
                                         <connections>
                                             <action selector="cropVideo:" destination="aj5-Za-NU2" eventType="touchUpInside" id="3KK-nS-xRk"/>
-                                            <segue destination="u9k-xt-dQT" kind="unwind" unwindAction="unwindToMainWithSegue:" id="ZjP-Nc-YsD"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7xS-tH-oiz" userLabel="Close Button">
@@ -165,7 +178,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="u9k-xt-dQT" kind="unwind" unwindAction="unwindToMainWithSegue:" id="1b3-i0-XCe"/>
+                                            <action selector="onClose" destination="aj5-Za-NU2" eventType="touchUpInside" id="LiT-uc-WEW"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -199,16 +212,17 @@
                     <navigationItem key="navigationItem" id="lHW-IB-WIW"/>
                     <connections>
                         <outlet property="buttonView" destination="MnE-YG-SNA" id="BI4-nk-gLN"/>
+                        <outlet property="closeButton" destination="7xS-tH-oiz" id="0Ak-Bt-HTO"/>
                         <outlet property="frameContainerView" destination="1fu-wj-F74" id="cc9-8X-8lF"/>
                         <outlet property="imageFrameView" destination="DNY-1K-3qA" id="iBX-1n-XmG"/>
+                        <outlet property="progressBar" destination="0nd-zm-8v4" id="rqd-bN-hVJ"/>
                         <outlet property="trimButton" destination="0uO-mJ-Zxu" id="ImF-XA-sNp"/>
                         <outlet property="videoLayer" destination="Yzo-jE-1BN" id="eUH-lz-TGh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iwr-gO-NgO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="u9k-xt-dQT" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="138" y="827"/>
+            <point key="canvasLocation" x="138" y="846"/>
         </scene>
         <!--Settings Table View Controller-->
         <scene sceneID="cn8-fp-tBa">
