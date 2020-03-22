@@ -45,10 +45,10 @@ There is also a settings page with links to this page, a share button, and an em
 | :scissors:     | Trim video after filming
 
 ## Preview
-### Trimming Feature
 
+<h3 align="center">Trimming Feature (Pro)</h3>
 <p align="center">
-<img src="TrimPreview.gif"/>
+<img src="TrimPreview.gif" width="30%" height="30%"/>
 </p>
 
 ## Requirements :heavy_exclamation_mark:
