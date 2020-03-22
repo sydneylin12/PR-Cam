@@ -1,4 +1,4 @@
-# PR Cam
+# PR Cam - Film with Music!
 
 **By Sid Lin**
 
@@ -11,15 +11,16 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Downloads-1k+-blue"/>
   <img src="https://img.shields.io/badge/iOS-13.0%2B-blue"/>
   <img src="https://img.shields.io/badge/Swift-5.1-orange"/>
   <img src="https://img.shields.io/github/last-commit/sydneylin12/pr-cam"/>
   <img src="https://img.shields.io/github/repo-size/sydneylin12/pr-cam"/>
-  <img src="https://img.shields.io/badge/Downloads-300%2B-brightgreen"/>
 </p>
 
 ## News :tada:
-PR Cam has reached over 500 downloads!
+PR Cam has reached over 1000 downloads!
+Trimming has been implemented in PR Cam Pro!
 
 ## Overview :page_with_curl:
 
@@ -41,15 +42,23 @@ There is also a settings page with links to this page, a share button, and an em
 | :clock1:       | Display film time
 | :dollar:       | In-app purchases
 | :red_circle:   | Pro theme
+| :scissors:     | Trim video after filming
 
+## Preview
+### Trimming Feature
+
+<p align="center">
+<img src="TrimPreview.gif"/>
+</p>
 
 ## Requirements :heavy_exclamation_mark:
 * iOS 13.0+
+* Front or back facing camera
 
 ## Issues & Updates :warning:
 * The audio briefly stops when the app is launched or moved to the background. 
   - This is because the app has to re-configure the audio every time it is launched since it does not use the default iOS settings.
-* The audio gets particularly laggy when swapping cameras quickly.
-  - Exit the app and restart it. Since the app has to configure the phone's audio to record and also be able to play music, it might get a bit buggy sometimes.
 * The app does not save videos 100% of the time.
   - I have updated the "Video Saved" notification to display if the app has saved with an error. Currently working to fix this bug. Reinstalling the app could be a potential solution as well.
+  - The videos could be too short.
+  - The app could be missing privacy settings
