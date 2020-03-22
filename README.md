@@ -24,9 +24,13 @@ Trimming has been implemented in PR Cam Pro!
 
 ## Overview :page_with_curl:
 
-PR Cam is an app that lets users film videos while listening to music. This is achieved by configuring the application's capture session to mix audio with other sources instead of canceling out the output to use the microphone. This app features a few features in common with that of a regular camera: an animated record button, flash, and flipping the camera.
+PR Cam is an app that lets users film videos while listening to music. This is achieved by configuring the application's capture session to mix audio with other sources instead of canceling out the output to use the microphone. This app features a few features in common with that of a regular camera: an animated record button, flash, a timer label, and flipping the camera.
 
-There is also a settings page with links to this page, a share button, and an email button. More updates are coming in the future!
+There is also a settings page with links to this page, a share button, and an email button. The settings page also displays the current version and PR Cam Pro features that can be toggled.
+
+PR Cam Pro has finally been updated as well! There is now an additional feature to the theme. Users can trim videos right after filming. The idea was that people would be using propping up their phones to film; trimming right after allows users to cut out wasted time in the video.
+
+More updates are coming in the future!
 
 ## Features :mag:
 
@@ -46,6 +50,11 @@ There is also a settings page with links to this page, a share button, and an em
 
 ## Preview
 
+<h3 align="center">UI Preview</h3>
+<p align="center">
+<img src="UIPreview.gif" width="30%" height="30%"/>
+</p>
+
 <h3 align="center">Trimming Feature (Pro)</h3>
 <p align="center">
 <img src="TrimPreview.gif" width="30%" height="30%"/>
@@ -62,3 +71,7 @@ There is also a settings page with links to this page, a share button, and an em
   - I have updated the "Video Saved" notification to display if the app has saved with an error. Currently working to fix this bug. Reinstalling the app could be a potential solution as well.
   - The videos could be too short.
   - The app could be missing privacy settings
+* There are 2 recordings when trimming
+  - I am working on an update to overwrite the recording instead of saving it again as a seperate trimmed recording.
+* The timer label is incorrect after one minute
+  - Also working on an update to fix this issue.
