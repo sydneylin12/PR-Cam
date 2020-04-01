@@ -41,12 +41,6 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var progressBar: UIProgressView!
 
-    //@IBOutlet weak var startView: UIView!
-    //@IBOutlet weak var startTimeText: UITextField!
-
-    //@IBOutlet weak var endView: UIView!
-    //@IBOutlet weak var endTimeText: UITextField!
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loadViews()
@@ -72,24 +66,6 @@ class TrimViewController: UIViewController {
         progressBar.isHidden = true
         progressBar.layer.masksToBounds = true
         progressBar.layer.cornerRadius = 5.0
-        
-        /*
-        layoutContainer.layer.borderWidth = 1.0
-        layoutContainer.layer.borderColor = UIColor.white.cgColor
-
-        selectButton.layer.cornerRadius = 5.0
-        cropButton.layer.cornerRadius   = 5.0
-
-        //Style for startTime
-        startTimeText.layer.cornerRadius = 5.0
-        startTimeText.layer.borderWidth  = 1.0
-        startTimeText.layer.borderColor  = UIColor.white.cgColor
-
-        //Style for endTime
-        endTimeText.layer.cornerRadius = 5.0
-        endTimeText.layer.borderWidth  = 1.0
-        endTimeText.layer.borderColor  = UIColor.white.cgColor
-        */
                 
         // Create the video player and asset from URL
         player = AVPlayer()
@@ -133,7 +109,7 @@ class TrimViewController: UIViewController {
         self.cropVideo(sourceURL: url as NSURL, startTime: start, endTime: end)
     }
     
-    // When close button is clicked
+    // When close button is clicked, dismiss the trim VC
     @IBAction func onClose() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -194,7 +170,7 @@ class TrimViewController: UIViewController {
     
     // Called when the tread finishes exporting the video and dismiss the trim VC
     @objc func exportCompleted(){
-        //print("Export session completed!")
+        deleteLast()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -215,18 +191,10 @@ class TrimViewController: UIViewController {
         progressBar.isHidden = false
         closeButton.isEnabled = false
         closeButton.setTitleColor(UIColor.gray, for: .normal)
-        
-        let manager = FileManager.default
-
-        do {
-            try manager.removeItem(at: self.url)
-        }
-        catch let error {
-            print("Error removing item at URL: \(error)")
-        }
 
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality) else {return}
-        exportSession.outputURL = self.url
+        let newUrl = generateURL()
+        exportSession.outputURL = newUrl
         exportSession.outputFileType = AVFileType.mp4
 
         let startTime = CMTime(seconds: Double(startTime), preferredTimescale: 1000)
@@ -241,7 +209,7 @@ class TrimViewController: UIViewController {
                 case .completed:
                     print("Exported at \(self.url!)")
                     isComplete = true
-                    self.saveToCameraRoll(url: self.url)
+                    self.saveToCameraRoll(url: newUrl)
                     // MUST call this on the main thread
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: Notification.Name("ExportCompleted"), object: nil)
@@ -249,15 +217,7 @@ class TrimViewController: UIViewController {
                 case .failed:
                     DispatchQueue.main.async {
                         isComplete = true
-                        createNotification(sender: self, title: "Error trimming video.", message: "The trimming operation failed due to an error.")
-                        self.closeButton.isEnabled = true
-                        self.closeButton.setTitleColor(UIColor.white, for: .normal)
-                    }
-                // Might not need this because exportSession.cancel not called
-                case .cancelled:
-                    DispatchQueue.main.async {
-                        isComplete = true
-                        createNotification(sender: self, title: "Error trimming video.", message: "The trimming was cancelled.")
+                        createAlert(sender: self, title: "Error trimming video.", message: "The trimming operation failed due to an error.")
                         self.closeButton.isEnabled = true
                         self.closeButton.setTitleColor(UIColor.white, for: .normal)
                     }
@@ -266,11 +226,10 @@ class TrimViewController: UIViewController {
             }
         }
         
+        // Update the progress bar continuously
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {
-            (timer) in
-            guard !isComplete else{
-                //print("Progress bar finished!")
-                timer.invalidate() // Stop the timer
+            (timer) in guard !isComplete else{
+                timer.invalidate()
                 return
             }
             self.progressBar.setProgress(exportSession.progress, animated: true)

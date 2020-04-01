@@ -26,6 +26,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var recordButton: RecordButton!
     
+    @IBOutlet weak var container: UIView!
+    
     // For the video screen
     var captureSession: AVCaptureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer()
@@ -51,13 +53,15 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         // Change label font for monospace
-        timerLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 28, weight: UIFont.Weight.regular)
+        timerLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 24, weight: UIFont.Weight.regular)
         timerLabel.text = String(convertTime(time: time))
         
-        // Detect double taps and upward swipe
+        //container.layer.cornerRadius = 5.0
+        //container.layer.masksToBounds = true
+        
+        // Detect gestures
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
-        
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
         swipeUp.direction = UISwipeGestureRecognizer.Direction.up
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinch(_:)))
@@ -82,7 +86,7 @@ class ViewController: UIViewController {
         recordButton.delegate = self
     }
     
-    // Force dark status bar only (NOT THEME)
+    // Force dark status bar only
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .darkContent
     }
@@ -91,7 +95,7 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "toTrimSegue") {
             let trimController = segue.destination as! TrimViewController
-            trimController.url = self.currentURL!
+            trimController.url = currentURL!
         }
     }
     
@@ -104,9 +108,8 @@ class ViewController: UIViewController {
             cameraPosition = CameraPosition.FRONT
         }
         else {
-            print("Error in swapping cameras - this should never happen!")
+            print("Error in swapping cameras!")
         }
-        // Re configure camera only
         configureCameraSwap()
     }
     
@@ -115,34 +118,21 @@ class ViewController: UIViewController {
         sender.pulse() // Play a pulse animation when flash is clicked
         let device = AVCaptureDevice.default(for: AVMediaType.video)
         
-        // If the device has a flash light
-        if device!.hasTorch{
+        if device!.hasTorch{ // If the device has a flash light
             do {
                 try device!.lockForConfiguration()
-                
-                // If the flash light is currently on
-                if (device!.torchMode == AVCaptureDevice.TorchMode.on) {
-                    // Change the image to untoggled
-                    sender.setImage(UIImage(named: "LightningLight"), for: .normal)
-                    // Turn the flash light off
+                if (device!.torchMode == AVCaptureDevice.TorchMode.on) { // If flash on
+                    sender.layer.opacity = 1
                     device!.torchMode = AVCaptureDevice.TorchMode.off
                 }
-                // If the light is currently off
-                else {
-                    do {
-                        // Toggle light button to pressed
-                        sender.setImage(UIImage(named: "LightningDark"), for: .normal)
-                        // Turn on flash light
-                        try device!.setTorchModeOn(level: 1.0)
-                    }
-                    catch {
-                        print("Error activating flash light!")
-                    }
+                else { // if flash off
+                    sender.layer.opacity = 0.5
+                    try device!.setTorchModeOn(level: 1.0)
                 }
                 device!.unlockForConfiguration()
             }
             catch {
-                print("No flash light detected on device!")
+                print("No flash light detected on device: \(error)")
             }
         }
     }
@@ -158,7 +148,7 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "toSettingsSegue", sender: self)
     }
     
-    // Code to configure the camera session with an enum value of FRONT or BACK
+    // Code to configure the camera session on initialization
     func configureSession() {
         do {
             // MUST RESET CAPTURE SESSION TO PREVENT EXCEPTIONS (MULTIPLE DEVICES)
@@ -169,16 +159,9 @@ class ViewController: UIViewController {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .defaultToSpeaker])
             try AVAudioSession.sharedInstance().setActive(true)
             
-            var camera: AVCaptureDevice? = nil
-            if cameraPosition == CameraPosition.FRONT {
-                camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)!
-            }
-            else if cameraPosition == CameraPosition.BACK {
-                camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
-            }
-            else {
-                print("This should never happen!")
-            }
+            // Default to back camera when initializing
+            let camera: AVCaptureDevice? = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+
             currentDevice = camera // Update current capture device
             let input = try AVCaptureDeviceInput(device: camera!)
             captureSession.addInput(input)
@@ -199,53 +182,51 @@ class ViewController: UIViewController {
     
     // Only swap the camera without configuring the audio
     func configureCameraSwap() {
-        blur() // Blur/fade in animation on camera swap
-        for input in captureSession.inputs { // Only remove camera inputs
+        blur()
+        
+        // Remove inputs with camera input only and keep audio input to prevent audio lag
+        for input in captureSession.inputs {
             let desc: String = input.description
-            if !desc.contains("Microphone") {
+            if desc.contains("Camera") {
                 captureSession.removeInput(input)
             }
         }
         
         // Set default to back camera
         var newCamera: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+        turnOffFlash() // Turn off in case flash is currently on
+
         if cameraPosition == CameraPosition.FRONT {
             newCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)!
-            disableFlash() // Turn off in case flash is currently on
-            flashButton.isEnabled = false
+            flashButton.isHidden = true
         }
-        else {
-            // Enable flash button on back camera only
-            flashButton.isEnabled = true
+        else { // Enable flash button on back camera only
+            flashButton.isHidden = false
         }
         
         do { // Re-add the capture input and play a flip animation
             try captureSession.addInput(AVCaptureDeviceInput(device: newCamera))
-            UIView.transition(with: swapButton, duration: 0.3, options: .transitionFlipFromLeft, animations: nil, completion: nil)
+            UIView.transition(with: swapButton, duration: 0.2, options: .transitionFlipFromLeft, animations: nil, completion: nil)
         }
         catch {
-            print("Error adding swapped camera input to capture session.")
+            print("Error adding swapped camera input to capture session: \(error)")
         }
     }
         
     // Disable the flash light in the event of a swap
-    func disableFlash() {
+    func turnOffFlash() {
         let device = AVCaptureDevice.default(for: AVMediaType.video)
-        // If the device has a flash light
-        if device!.hasTorch{
+        if device!.hasTorch{ // If the device has a flash light
             do {
                 try device!.lockForConfiguration()
-                // If the flash light is currently on
                 if (device!.torchMode == AVCaptureDevice.TorchMode.on) {
-                    // Change the image to untoggled
-                    flashButton.setImage(UIImage(named: "LightningLight"), for: .normal)
-                    // Turn the flash light off
+                    flashButton.layer.opacity = 1
                     device!.torchMode = AVCaptureDevice.TorchMode.off
                 }
                 device!.unlockForConfiguration()
             }
             catch {
-                print("No flash light detected on device!")
+                print("No flash light detected on device: \(error)")
             }
         }
     }
@@ -254,24 +235,32 @@ class ViewController: UIViewController {
     func createFinishedRecordingAlert() {
         let alert = UIAlertController(title: "PR Cam recording finished.", message: "What would you like to do?", preferredStyle: .alert)
         
-        // Request a review when the alert is dismissed
-        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: nil))
-        
-        alert.addAction(UIAlertAction(title: "Trim", style: .default, handler: {
-            (action) in self.performSegue(withIdentifier: "toTrimSegue", sender: self)
+        // Save the video and request for a review
+        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {
+            _ in requestReview()
         }))
         
-        // Present the alert
+        if isPro() { // Only add trim for pro users
+            alert.addAction(UIAlertAction(title: "Trim", style: .default, handler: {
+                _ in self.performSegue(withIdentifier: "toTrimSegue", sender: self)
+            }))
+        }
+        
+        // Delete the footage and request a review
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: {
+            _ in deleteLast()
+            requestReview()
+        }))
+        
         self.present(alert, animated: true, completion: nil)
     }
     
     // Trigger a blur effect for swapping the camera
     func blur() {
-        // Create a blur effect and blur view
         let blurEffect = UIBlurEffect(style: .regular)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.frame = self.view.bounds // Set bounds to whole screen
-        UIView.transition(with: self.mainView, duration: 0.75, options: .transitionCrossDissolve, animations: nil, completion: nil)
+        UIView.transition(with: self.mainView, duration: 0.4, options: .transitionCrossDissolve, animations: nil, completion: nil)
     }
     
     // Handle the pinch gesture to zoom the camera (closure)
@@ -322,10 +311,9 @@ class ViewController: UIViewController {
     
     // Handle gestures such as double tap and swipes
     @objc func doubleTapped() {
-        // Disable if turned off in settings
-        if hasKey(key: "DoubleTapEnabled") {
-            let b: Bool! = (getValue(key: "DoubleTapEnabled") as! Bool)
-            if !b {
+        if hasKey(key: "DoubleTapEnabled") { // Disable if turned off in settings
+            let enabled: Bool! = (getValue(key: "DoubleTapEnabled") as! Bool)
+            if !enabled {
                 return
             }
         }
@@ -343,30 +331,18 @@ class ViewController: UIViewController {
     
     // Called when the application is moved into the background
     @objc func appMovedToBackground() {
-        if(recordingState){
-            print("App turned off when recording.")
-            
-            // Force end recording in animated record button
+        if recordingState {
+            // Force end recording
             recordButton.endRecording()
-            
-            //Update boolean flag
             recordingState = false
-            
-            // Turn off timer
             timer.invalidate()
             time = 0
             timerLabel.text = String(convertTime(time: time))
-
-            // Stop recording and create notification
             movieOutput.stopRecording()
             
             // Save file to path
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let fileUrl = paths[0].appendingPathComponent("output.mov")
-            UISaveVideoAtPathToSavedPhotosAlbum(fileUrl.path, nil, nil, nil )
-            
-            // Create notification of background app
-            createNotification(sender: self, title: "Recording Ended", message: "The recording has been saved before the application was exited.")
+            UISaveVideoAtPathToSavedPhotosAlbum(currentURL!.path, nil, nil, nil )
+            createAlert(sender: self, title: "Recording Ended", message: "The recording has been saved before the application was exited.")
         }
     }
 }
@@ -375,7 +351,6 @@ class ViewController: UIViewController {
 extension ViewController: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error == nil {
-            //print("Video finished recording to output file URL: \(outputFileURL)")
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(video(videoPath:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
@@ -383,19 +358,8 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
     // Handle when the file finishes saving
     @objc func video(videoPath: String, didFinishSavingWithError error: NSError?, contextInfo info: UnsafeMutableRawPointer) {
         if(error == nil) {
-            var trimEnabled: Bool = false
-            if(hasKey(key: "TrimEnabled")){
-                trimEnabled = getValue(key: "TrimEnabled") as! Bool
-            }
-            if(trimEnabled) { // Allow user to trim
-                createFinishedRecordingAlert()
-            }
-            else { // Create default alert
-                createNotification(sender: self, title: "PR Cam recording finished.", message: "Video has been saved to the camera roll.")
-            }
-        }
-        else {
-            createNotification(sender: self, title: "Error saving video", message: "There was an error saving the video. Please check the app settings.")
+            // Create the alert using the same function regardless
+            createFinishedRecordingAlert()
         }
     }
 }
@@ -407,7 +371,7 @@ extension ViewController: RecordButtonDelegate {
             // Update boolean flag
             self.recordingState = true
             
-            //Start timer
+            // Start timer (hundredth of a second)
             timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.action), userInfo: nil, repeats: true)
             
             // Begin capture session
@@ -417,6 +381,8 @@ extension ViewController: RecordButtonDelegate {
             let fileURL = generateURL()
             currentURL = fileURL
             movieOutput.startRecording(to: fileURL, recordingDelegate: self)
+            
+            //UIView.transition(with: container, duration: 0.25, options: .transitionCrossDissolve, animations: nil, completion: nil)
         }
         else{ // If the camera is recording
             self.recordingState = false

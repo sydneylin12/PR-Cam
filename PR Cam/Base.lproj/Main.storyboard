@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,74 +28,87 @@
                                     <constraint firstAttribute="width" secondItem="jMw-iK-CxF" secondAttribute="height" multiplier="1:1" id="aBV-dJ-gas"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eLi-zP-Jun" userLabel="Timer Label">
-                                <rect key="frame" x="156.5" y="54" width="101" height="50"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mxb-IN-ZwV" userLabel="Container">
+                                <rect key="frame" x="0.0" y="44" width="414" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yi-gz-Kps" userLabel="Settings Button">
+                                        <rect key="frame" x="359" y="7.5" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="2cI-6z-TE7"/>
+                                            <constraint firstAttribute="height" constant="35" id="lpJ-xe-lkX"/>
+                                        </constraints>
+                                        <state key="normal" image="Settings.png"/>
+                                        <connections>
+                                            <action selector="settingsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ggc-K9-GD1"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gE-Yb-UV0" userLabel="Flash Button">
+                                        <rect key="frame" x="80" y="7.5" width="20" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="FHf-ne-T0r"/>
+                                            <constraint firstAttribute="height" constant="35" id="d4i-aq-CnR"/>
+                                        </constraints>
+                                        <state key="normal" image="LightningLight.png"/>
+                                        <connections>
+                                            <action selector="flashPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dso-7L-nuR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R84-RU-Dvx" userLabel="Swap Button">
+                                        <rect key="frame" x="20" y="5" width="40" height="40"/>
+                                        <accessibility key="accessibilityConfiguration" label="Swap Button">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="bSs-7d-u7c"/>
+                                            <constraint firstAttribute="width" secondItem="R84-RU-Dvx" secondAttribute="height" multiplier="1:1" id="ydq-lc-tyO"/>
+                                        </constraints>
+                                        <state key="normal" image="RotateCamera.png"/>
+                                        <connections>
+                                            <action selector="swapPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yuc-YM-feR"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eLi-zP-Jun" userLabel="Timer Label">
+                                        <rect key="frame" x="132" y="0.0" width="150" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="1ia-ZR-0de"/>
+                                            <constraint firstAttribute="height" constant="50" id="sVY-cb-pC1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.3397367294520548" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="sVY-cb-pC1"/>
+                                    <constraint firstItem="eLi-zP-Jun" firstAttribute="centerX" secondItem="mxb-IN-ZwV" secondAttribute="centerX" id="0At-x3-Wx4"/>
+                                    <constraint firstItem="R84-RU-Dvx" firstAttribute="leading" secondItem="mxb-IN-ZwV" secondAttribute="leading" constant="20" id="1Kc-1o-lgE"/>
+                                    <constraint firstItem="5gE-Yb-UV0" firstAttribute="leading" secondItem="R84-RU-Dvx" secondAttribute="trailing" constant="20" id="Brh-fa-Yju"/>
+                                    <constraint firstItem="5gE-Yb-UV0" firstAttribute="centerY" secondItem="mxb-IN-ZwV" secondAttribute="centerY" id="PQQ-64-XEn"/>
+                                    <constraint firstAttribute="height" constant="50" id="Q0n-8P-OLL"/>
+                                    <constraint firstItem="R84-RU-Dvx" firstAttribute="centerY" secondItem="mxb-IN-ZwV" secondAttribute="centerY" id="Sqd-yV-1n3"/>
+                                    <constraint firstItem="eLi-zP-Jun" firstAttribute="centerY" secondItem="mxb-IN-ZwV" secondAttribute="centerY" id="d4l-FG-hpl"/>
+                                    <constraint firstItem="2yi-gz-Kps" firstAttribute="trailing" secondItem="mxb-IN-ZwV" secondAttribute="trailing" constant="-20" id="hes-er-4bl"/>
+                                    <constraint firstItem="2yi-gz-Kps" firstAttribute="centerY" secondItem="mxb-IN-ZwV" secondAttribute="centerY" id="stE-NK-t3C"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R84-RU-Dvx" userLabel="Swap Button">
-                                <rect key="frame" x="10" y="54" width="75" height="75"/>
-                                <accessibility key="accessibilityConfiguration" label="Swap Button">
-                                    <accessibilityTraits key="traits" button="YES"/>
-                                    <bool key="isElement" value="YES"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="bSs-7d-u7c"/>
-                                    <constraint firstAttribute="width" secondItem="R84-RU-Dvx" secondAttribute="height" multiplier="1:1" id="ydq-lc-tyO"/>
-                                </constraints>
-                                <state key="normal" image="RotateCamera.png"/>
-                                <connections>
-                                    <action selector="swapPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yuc-YM-feR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gE-Yb-UV0" userLabel="Flash Button">
-                                <rect key="frame" x="32.5" y="139" width="30" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="FHf-ne-T0r"/>
-                                    <constraint firstAttribute="height" constant="50" id="d4i-aq-CnR"/>
-                                </constraints>
-                                <state key="normal" image="LightningLight.png"/>
-                                <connections>
-                                    <action selector="flashPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dso-7L-nuR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yi-gz-Kps" userLabel="Settings Button">
-                                <rect key="frame" x="339" y="59" width="65" height="65"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="65" id="2cI-6z-TE7"/>
-                                    <constraint firstAttribute="width" secondItem="2yi-gz-Kps" secondAttribute="height" multiplier="1:1" id="8CC-WJ-iNa"/>
-                                </constraints>
-                                <state key="normal" image="Settings.png"/>
-                                <connections>
-                                    <action selector="settingsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ggc-K9-GD1"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="top" secondItem="R84-RU-Dvx" secondAttribute="bottom" constant="10" id="5jS-lN-OAD"/>
-                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="centerX" secondItem="R84-RU-Dvx" secondAttribute="centerX" id="9uY-ca-8yM"/>
                             <constraint firstItem="jMw-iK-CxF" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="C4o-YP-vsL"/>
                             <constraint firstItem="Hrp-q7-98m" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="PF1-JD-QMo"/>
                             <constraint firstItem="Hrp-q7-98m" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Qny-k3-6Rv"/>
-                            <constraint firstItem="R84-RU-Dvx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="SBL-pS-QKR"/>
-                            <constraint firstItem="2yi-gz-Kps" firstAttribute="centerY" secondItem="R84-RU-Dvx" secondAttribute="centerY" id="Tur-ig-Id4"/>
-                            <constraint firstItem="2yi-gz-Kps" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-10" id="VSf-ag-AFe"/>
                             <constraint firstItem="Hrp-q7-98m" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="YOV-jg-WdX"/>
                             <constraint firstItem="jMw-iK-CxF" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-10" id="Yec-cO-5yU"/>
-                            <constraint firstItem="R84-RU-Dvx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="pXO-YJ-TvI"/>
-                            <constraint firstItem="5gE-Yb-UV0" firstAttribute="top" secondItem="R84-RU-Dvx" secondAttribute="bottom" constant="10" id="wIL-Ed-Vjl"/>
-                            <constraint firstItem="eLi-zP-Jun" firstAttribute="centerX" secondItem="jMw-iK-CxF" secondAttribute="centerX" id="xyY-NK-tWh"/>
+                            <constraint firstItem="mxb-IN-ZwV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="nql-pY-m3J"/>
+                            <constraint firstItem="mxb-IN-ZwV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="qbK-df-FWP"/>
+                            <constraint firstItem="mxb-IN-ZwV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="y35-PX-iKk"/>
                             <constraint firstItem="Hrp-q7-98m" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="yKB-G6-E4c"/>
-                            <constraint firstItem="eLi-zP-Jun" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="zUi-Ge-dYn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="container" destination="mxb-IN-ZwV" id="5vp-zh-rwZ"/>
                         <outlet property="flashButton" destination="5gE-Yb-UV0" id="e1S-pz-Otg"/>
                         <outlet property="mainView" destination="Hrp-q7-98m" id="TU9-Fb-0B2"/>
                         <outlet property="recordButton" destination="jMw-iK-CxF" id="qLn-YO-ypA"/>
@@ -402,11 +415,11 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="PR Cam Pro" id="1fK-0i-ggu">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" id="RYH-1H-tDb">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="RYH-1H-tDb">
                                         <rect key="frame" x="20" y="484.5" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RYH-1H-tDb" id="Oio-Kt-jfj">
-                                            <rect key="frame" x="0.0" y="0.0" width="311" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchase PR Cam Pro" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d2j-uI-hbS">
@@ -476,32 +489,24 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="dET-10-7u8">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" id="6uB-lN-qYE">
                                         <rect key="frame" x="20" y="615" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dET-10-7u8" id="GBl-bn-NH6">
-                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6uB-lN-qYE" id="PHu-Z4-Duk">
+                                            <rect key="frame" x="0.0" y="0.0" width="330" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trim after Recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GsC-Gi-zUw">
-                                                    <rect key="frame" x="20" y="11.5" width="156" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2kC-IF-twZ">
+                                                    <rect key="frame" x="20" y="11.5" width="72.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-hw-lUb" customClass="SettingsSwitch" customModule="PR_Cam" customModuleProvider="target">
-                                                    <rect key="frame" x="305" y="6.5" width="51" height="31"/>
-                                                    <connections>
-                                                        <action selector="onSwitchChanged:" destination="wOk-uG-oBO" eventType="touchUpInside" id="tAD-Wi-QP8"/>
-                                                    </connections>
-                                                </switch>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="JLe-hw-lUb" firstAttribute="trailing" secondItem="GBl-bn-NH6" secondAttribute="trailing" constant="-20" id="Anw-mW-9Ze"/>
-                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="JLe-hw-lUb" secondAttribute="leading" id="E1c-es-JwV"/>
-                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="centerY" secondItem="GBl-bn-NH6" secondAttribute="centerY" id="Jsi-pm-NJ6"/>
-                                                <constraint firstItem="GsC-Gi-zUw" firstAttribute="leading" secondItem="GBl-bn-NH6" secondAttribute="leadingMargin" id="gMb-bf-jdw"/>
-                                                <constraint firstItem="JLe-hw-lUb" firstAttribute="centerY" secondItem="GBl-bn-NH6" secondAttribute="centerY" id="irf-G2-BgQ"/>
+                                                <constraint firstItem="2kC-IF-twZ" firstAttribute="leading" secondItem="PHu-Z4-Duk" secondAttribute="leadingMargin" id="DEV-pY-Oqf"/>
+                                                <constraint firstItem="2kC-IF-twZ" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="PHu-Z4-Duk" secondAttribute="trailingMargin" constant="-250.5" id="liN-Ce-Zw1"/>
+                                                <constraint firstItem="2kC-IF-twZ" firstAttribute="centerY" secondItem="PHu-Z4-Duk" secondAttribute="centerY" id="pYL-yw-V80"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
@@ -517,13 +522,12 @@
                     <connections>
                         <outlet property="doubleTapCell" destination="xhI-mE-gnH" id="bcz-zD-EdR"/>
                         <outlet property="doubleTapSwitch" destination="Lqk-LR-iQy" id="Jh0-EQ-U8x"/>
+                        <outlet property="moreInfoCell" destination="6uB-lN-qYE" id="Xo5-Mj-7Df"/>
                         <outlet property="pinchCell" destination="5Hj-0X-l9d" id="6lh-lb-x8H"/>
                         <outlet property="pinchSwitch" destination="kt5-ns-ma3" id="fme-cN-LSD"/>
                         <outlet property="proSwitch" destination="ofs-Ot-DNo" id="aTa-xn-jQ1"/>
                         <outlet property="proToggleCell" destination="4RP-PD-Juy" id="1J6-8b-Ro6"/>
                         <outlet property="purchaseProCell" destination="RYH-1H-tDb" id="9Wc-ug-umb"/>
-                        <outlet property="trimCell" destination="dET-10-7u8" id="7zw-F5-mT6"/>
-                        <outlet property="trimSwitch" destination="JLe-hw-lUb" id="yPg-n2-Ssh"/>
                         <outlet property="versionLabel" destination="SiD-jE-Lcg" id="aIA-bQ-emB"/>
                     </connections>
                 </tableViewController>
