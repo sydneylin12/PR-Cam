@@ -17,14 +17,12 @@
 		000D110523B5A9C800BED536 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 000D110423B5A9C800BED536 /* Assets.xcassets */; };
 		000D110823B5A9C800BED536 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 000D110623B5A9C800BED536 /* LaunchScreen.storyboard */; };
 		000D5BF823F20DA300EE5716 /* PR Cam App Icons in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BF723F20DA300EE5716 /* PR Cam App Icons */; };
-		000D5BFF23F20DDA00EE5716 /* LightningDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BF923F20DD900EE5716 /* LightningDark.png */; };
 		000D5C0023F20DDA00EE5716 /* RotateCamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFA23F20DD900EE5716 /* RotateCamera.png */; };
 		000D5C0123F20DDA00EE5716 /* LightningLight.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFB23F20DDA00EE5716 /* LightningLight.png */; };
 		000D5C0223F20DDA00EE5716 /* PR Cam App Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFC23F20DDA00EE5716 /* PR Cam App Icon.png */; };
 		000D5C0323F20DDA00EE5716 /* PR Cam Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFD23F20DDA00EE5716 /* PR Cam Logo.png */; };
 		000D5C0423F20DDA00EE5716 /* CameraRoll.png in Resources */ = {isa = PBXBuildFile; fileRef = 000D5BFE23F20DDA00EE5716 /* CameraRoll.png */; };
 		001B16A823E0EFE200A26654 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001B16A723E0EFE200A26654 /* Helper.swift */; };
-		006BC07723F34280000785D4 /* PR Cam Logo Dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 006BC07623F34280000785D4 /* PR Cam Logo Dark.png */; };
 		007E61F5241DBC4500F775CC /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F4241DBC4500F775CC /* RecordButton.swift */; };
 		007E61F7241DBFDE00F775CC /* TrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F6241DBFDE00F775CC /* TrimViewController.swift */; };
 		007E61F9241EA55A00F775CC /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E61F8241EA55A00F775CC /* RangeSlider.swift */; };
@@ -45,14 +43,12 @@
 		000D110723B5A9C800BED536 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		000D110923B5A9C800BED536 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		000D5BF723F20DA300EE5716 /* PR Cam App Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "PR Cam App Icons"; path = "../../../Photos/PR Cam App Icons"; sourceTree = "<group>"; };
-		000D5BF923F20DD900EE5716 /* LightningDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightningDark.png; path = ../../../Photos/LightningDark.png; sourceTree = "<group>"; };
 		000D5BFA23F20DD900EE5716 /* RotateCamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RotateCamera.png; path = ../../../Photos/RotateCamera.png; sourceTree = "<group>"; };
 		000D5BFB23F20DDA00EE5716 /* LightningLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightningLight.png; path = ../../../Photos/LightningLight.png; sourceTree = "<group>"; };
 		000D5BFC23F20DDA00EE5716 /* PR Cam App Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PR Cam App Icon.png"; path = "../../../Photos/PR Cam App Icon.png"; sourceTree = "<group>"; };
 		000D5BFD23F20DDA00EE5716 /* PR Cam Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PR Cam Logo.png"; path = "../../../Photos/PR Cam Logo.png"; sourceTree = "<group>"; };
 		000D5BFE23F20DDA00EE5716 /* CameraRoll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CameraRoll.png; path = ../../../Photos/CameraRoll.png; sourceTree = "<group>"; };
 		001B16A723E0EFE200A26654 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		006BC07623F34280000785D4 /* PR Cam Logo Dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PR Cam Logo Dark.png"; path = "../../../Photos/PR Cam Logo Dark.png"; sourceTree = "<group>"; };
 		007E61F4241DBC4500F775CC /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		007E61F6241DBFDE00F775CC /* TrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimViewController.swift; sourceTree = "<group>"; };
 		007E61F8241EA55A00F775CC /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
@@ -122,10 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				0002867D23FA4193000C9BF8 /* Settings.png */,
-				006BC07623F34280000785D4 /* PR Cam Logo Dark.png */,
 				000D5BFE23F20DDA00EE5716 /* CameraRoll.png */,
 				000D10FB23B5A9C700BED536 /* AppDelegate.swift */,
-				000D5BF923F20DD900EE5716 /* LightningDark.png */,
 				000D5BFB23F20DDA00EE5716 /* LightningLight.png */,
 				000D5BFC23F20DDA00EE5716 /* PR Cam App Icon.png */,
 				000D5BFD23F20DDA00EE5716 /* PR Cam Logo.png */,
@@ -197,10 +191,8 @@
 				000D5C0423F20DDA00EE5716 /* CameraRoll.png in Resources */,
 				000D5C0323F20DDA00EE5716 /* PR Cam Logo.png in Resources */,
 				000D5BF823F20DA300EE5716 /* PR Cam App Icons in Resources */,
-				006BC07723F34280000785D4 /* PR Cam Logo Dark.png in Resources */,
 				000D110823B5A9C800BED536 /* LaunchScreen.storyboard in Resources */,
 				000D5C0223F20DDA00EE5716 /* PR Cam App Icon.png in Resources */,
-				000D5BFF23F20DDA00EE5716 /* LightningDark.png in Resources */,
 				0002867E23FA4193000C9BF8 /* Settings.png in Resources */,
 				000D5C0023F20DDA00EE5716 /* RotateCamera.png in Resources */,
 				000D110523B5A9C800BED536 /* Assets.xcassets in Resources */,
@@ -377,7 +369,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -398,7 +390,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sydneylin.prcam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -169,8 +169,13 @@ class TrimViewController: UIViewController {
     }
     
     // Called when the tread finishes exporting the video and dismiss the trim VC
-    @objc func exportCompleted(){
+    @objc func exportCompleted() {
         deleteLast()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    // Dismiss the view controller
+    @objc func exportFailed() {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -191,6 +196,8 @@ class TrimViewController: UIViewController {
         progressBar.isHidden = false
         closeButton.isEnabled = false
         closeButton.setTitleColor(UIColor.gray, for: .normal)
+        trimButton.isEnabled = false
+        trimButton.setTitleColor(UIColor.gray, for: .normal)
 
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality) else {return}
         let newUrl = generateURL()
@@ -220,6 +227,8 @@ class TrimViewController: UIViewController {
                         createAlert(sender: self, title: "Error trimming video.", message: "The trimming operation failed due to an error.")
                         self.closeButton.isEnabled = true
                         self.closeButton.setTitleColor(UIColor.white, for: .normal)
+                        self.trimButton.isEnabled = true
+                        self.trimButton.setTitleColor(UIColor.systemRed, for: .normal)
                     }
                 default:
                     break
